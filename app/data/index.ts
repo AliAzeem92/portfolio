@@ -2,6 +2,8 @@ import { SkillsCategory, Project } from "../types";
 import { Mail, Github, Linkedin } from "lucide-react";
 import Shahab from "@/public/Projects/Shahab-Portfolio.png";
 import Movie from "@/public/Projects/movie-suggestion.png";
+import crud from "@/public/Projects/crud.png";
+import CurrencyConverter from "@/public/Projects/CurrencyConverter.jpg";
 
 export const roles = [
   "Full Stack Developer",
@@ -78,24 +80,35 @@ export const projects: Project[] = [
     liveUrl: "https://ali-azeem-movie-suggestion-app.vercel.app/",
     githubUrl: "https://github.com/AliAzeem92/Movie-Suggestion",
   },
-  // {
-  //   id: 3,
-  //   title: "DevCollab Platform",
-  //   category: "SaaS Platform",
-  //   description:
-  //     "A collaborative workspace for development teams featuring real-time code sharing, project management, and integrated communication tools.",
-  //   image: pic,
-  //   technologies: ["React", "WebRTC", "Socket.io", "Redis", "Docker"],
-  //   features: [
-  //     "Real-time collaborative coding",
-  //     "Integrated video conferencing",
-  //     "Project timeline management",
-  //     "Code review automation",
-  //   ],
-  //   liveUrl: "https://devcollab.tech",
-  //   githubUrl: "https://github.com/alexjohnson/devcollab",
-  //   metrics: { users: "5K+", performance: "99%", satisfaction: "4.7/5" },
-  // },
+  {
+    id: 3,
+    title: "MERN CRUD",
+    category: "Web Application",
+    description:
+      "A full-stack MERN application that implements Create, Read, Update, and Delete (CRUD) functionality, built with MongoDB, Express.js, React, and Node.js.",
+    image: crud,
+    technologies: [
+      "MongoDB",
+      "Express.js",
+      "React.js",
+      "Node.js",
+      "Tailwind CSS",
+      "TypeScript",
+    ],
+    liveUrl: "https://aliazeem-crudverse.vercel.app/",
+    githubUrl: "https://github.com/AliAzeem92/MERN-STACK-CRUD",
+  },
+  {
+    id: 4,
+    title: "Currency Converter",
+    category: "AI Application",
+    description:
+      "A real-time currency converter that allows users to convert between multiple currencies using live exchange rates. Built with React, TypeScript, Tailwind CSS, and a currency API.",
+    image: CurrencyConverter,
+    technologies: ["React.js", "REST API", "Tailwind CSS", "TypeScript"],
+    liveUrl: "https://my-currency-exchanger-18.vercel.app/",
+    githubUrl: "https://github.com/AliAzeem92/Movie-Suggestion",
+  },
 ];
 
 export const socialLinks = [
