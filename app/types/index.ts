@@ -18,14 +18,8 @@ export interface Project {
   description: string;
   image: string | StaticImageData;
   technologies: string[];
-  features: string[];
   liveUrl: string;
   githubUrl: string;
-  metrics: {
-    users: string;
-    performance: string;
-    satisfaction: string;
-  };
 }
 
 export interface SocialLink {

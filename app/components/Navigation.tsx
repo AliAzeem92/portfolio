@@ -9,15 +9,17 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ scrollToSection }) => {
   return (
-    <nav className="relative z-10 flex justify-between items-center p-6 lg:p-8 md:mx-12 ">
-      <div className="hidden md:flex items-center space-x-2">
+    <nav className="relative z-10 flex flex-col md:flex-row justify-between items-center p-4 sm:p-6 lg:p-8 md:mx-12">
+      {/* Logo (hidden on mobile) */}
+      <div className="hidden md:flex items-center space-x-2 mb-4 md:mb-0">
         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
           <Code className="w-6 h-6 text-white" />
         </div>
         <span className="text-white font-bold text-xl">Ali Azeem</span>
       </div>
 
-      <div className="flex gap-7 sm:gap-0 md:space-x-8 text-gray-300">
+      {/* Navigation Buttons */}
+      <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-gray-300">
         {["About", "Education", "Projects", "Skills", "Contact"].map((item) => (
           <button
             key={item}

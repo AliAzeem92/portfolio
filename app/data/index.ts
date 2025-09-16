@@ -1,6 +1,7 @@
 import { SkillsCategory, Project } from "../types";
 import { Mail, Github, Linkedin } from "lucide-react";
-import pic from "@/public/me.jpg";
+import Shahab from "@/public/Projects/Shahab-Portfolio.png";
+import Movie from "@/public/Projects/movie-suggestion.png";
 
 export const roles = [
   "Full Stack Developer",
@@ -44,58 +45,57 @@ export const skills: SkillsCategory = {
 export const projects: Project[] = [
   {
     id: 1,
-    title: "EcoTracker Dashboard",
+    title: "Shahab Ahmad Portfolio",
     category: "Full Stack App",
     description:
-      "A comprehensive sustainability tracking platform that helps companies monitor their environmental impact with real-time analytics and reporting.",
-    image: pic,
-    technologies: ["React", "Node.js", "PostgreSQL", "D3.js", "AWS"],
-    features: [
-      "Real-time carbon footprint tracking",
-      "Interactive data visualizations",
-      "Automated report generation",
-      "Multi-tenant architecture",
+      "A sleek and responsive portfolio website for Shahab Ahmad, developed with Next.js and TypeScript, featuring modern UI components and seamless performance.",
+    image: Shahab,
+    technologies: [
+      "Next.js",
+      "Email.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Aceternity Ui",
     ],
-    liveUrl: "https://ecotracker-demo.com",
-    githubUrl: "https://github.com/alexjohnson/ecotracker",
-    metrics: { users: "10K+", performance: "98%", satisfaction: "4.8/5" },
+    liveUrl: "https://shahabahmad.online/",
+    githubUrl: "https://github.com/AliAzeem92/Shahab-Ahmad-Portfolio",
   },
   {
     id: 2,
-    title: "MindfulChat AI",
+    title: "Movie Suggestion",
     category: "AI Application",
     description:
-      "An intelligent mental health companion app powered by advanced NLP, providing personalized support and mood tracking capabilities.",
-    image: pic,
-    technologies: ["Next.js", "OpenAI API", "Python", "MongoDB", "Stripe"],
-    features: [
-      "AI-powered conversation analysis",
-      "Personalized wellness recommendations",
-      "Secure data encryption",
-      "Progress tracking & insights",
+      "A movie recommendation app that suggests films based on user preferences, built with React, Node.js, and Tailwind CSS.",
+    image: Movie,
+    technologies: [
+      "React.js",
+      "REST API",
+      "Node.js",
+      "Express.js",
+      "Tailwind CSS",
+      "TypeScript",
     ],
-    liveUrl: "https://mindfulchat.app",
-    githubUrl: "https://github.com/alexjohnson/mindfulchat",
-    metrics: { users: "25K+", performance: "96%", satisfaction: "4.9/5" },
+    liveUrl: "https://ali-azeem-movie-suggestion-app.vercel.app/",
+    githubUrl: "https://github.com/AliAzeem92/Movie-Suggestion",
   },
-  {
-    id: 3,
-    title: "DevCollab Platform",
-    category: "SaaS Platform",
-    description:
-      "A collaborative workspace for development teams featuring real-time code sharing, project management, and integrated communication tools.",
-    image: pic,
-    technologies: ["React", "WebRTC", "Socket.io", "Redis", "Docker"],
-    features: [
-      "Real-time collaborative coding",
-      "Integrated video conferencing",
-      "Project timeline management",
-      "Code review automation",
-    ],
-    liveUrl: "https://devcollab.tech",
-    githubUrl: "https://github.com/alexjohnson/devcollab",
-    metrics: { users: "5K+", performance: "99%", satisfaction: "4.7/5" },
-  },
+  // {
+  //   id: 3,
+  //   title: "DevCollab Platform",
+  //   category: "SaaS Platform",
+  //   description:
+  //     "A collaborative workspace for development teams featuring real-time code sharing, project management, and integrated communication tools.",
+  //   image: pic,
+  //   technologies: ["React", "WebRTC", "Socket.io", "Redis", "Docker"],
+  //   features: [
+  //     "Real-time collaborative coding",
+  //     "Integrated video conferencing",
+  //     "Project timeline management",
+  //     "Code review automation",
+  //   ],
+  //   liveUrl: "https://devcollab.tech",
+  //   githubUrl: "https://github.com/alexjohnson/devcollab",
+  //   metrics: { users: "5K+", performance: "99%", satisfaction: "4.7/5" },
+  // },
 ];
 
 export const socialLinks = [

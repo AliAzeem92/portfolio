@@ -4,6 +4,7 @@ import React from "react";
 import { Eye, Github } from "lucide-react";
 import { Project } from "../types";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProjectCardProps {
   project: Project;
@@ -24,20 +25,22 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent rounded-2xl opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-end p-6">
           <div className="flex space-x-4">
-            <a
+            <Link
               href={project.liveUrl}
+              target="_blank"
               className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-white/30 transition-colors"
             >
               <Eye className="w-4 h-4" />
               <span>Live Demo</span>
-            </a>
-            <a
+            </Link>
+            <Link
               href={project.githubUrl}
+              target="_blank"
               className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-white/30 transition-colors"
             >
               <Github className="w-4 h-4" />
               <span>Code</span>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

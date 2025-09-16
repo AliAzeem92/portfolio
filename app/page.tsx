@@ -9,6 +9,7 @@ import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 import { roles } from "./data";
 import EducationSection from "./components/EducationSection";
+import FloatingWhatsApp from "./components/FloatingWhatsApp";
 
 const PortfolioSite: React.FC = () => {
   const [currentRole, setCurrentRole] = useState(0);
@@ -79,6 +80,10 @@ const PortfolioSite: React.FC = () => {
           }
         }
       `}</style>
+      <FloatingWhatsApp
+        phoneNumber="923218515137"
+        message="Hi! I have a question."
+      />
     </div>
   );
 };

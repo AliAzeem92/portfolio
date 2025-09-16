@@ -5,7 +5,8 @@ import { Sparkles, ArrowRight, ExternalLink, ChevronDown } from "lucide-react";
 import { roles } from "../data";
 import Navigation from "./Navigation";
 import Image from "next/image";
-import MyImage from "../../public/me.jpg";
+// import MyImage from "../../public/me.jpg";
+import MyImage from "../../public/me-bgblur.png";
 
 interface HeroSectionProps {
   currentRole: number;
@@ -65,24 +66,24 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       />
 
       {/* Hero Content */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 mx-10 lg:mx-20 pt-10">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 mx-10 lg:mx-20 pt-5 sm:pt-10">
         {/* Left Content */}
         <div className="flex-1 text-center lg:text-left">
-          <div className="flex items-center justify-center lg:justify-start space-x-2 mb-6">
+          <div className="flex items-center justify-center lg:justify-start space-x-2 sm:mb-6 ">
             <Sparkles className="w-6 h-6 text-yellow-400 animate-pulse" />
             <span className="text-purple-300 text-lg font-medium tracking-wide">
               Hello, I&apos;m
             </span>
           </div>
 
-          <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold text-white mb-4 leading-tight">
+          <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold text-white sm:mb-4 leading-tight">
             <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-pulse">
               Ali
             </span>{" "}
             <span className="text-white">Azeem</span>
           </h1>
 
-          <div className="h-16 lg:h-20 mb-8 flex items-center justify-center lg:justify-start">
+          <div className="h-16 lg:h-20 sm:mb-8 flex items-center justify-center lg:justify-start">
             <h2 className="text-xl lg:text-2xl xl:text-4xl text-gray-300 font-light">
               <span className="text-purple-400">{"<"}</span>
               <span
@@ -103,7 +104,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </p>
 
           {/* CTA Buttons */}
-          <div className="relative z-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+          <div className="relative z-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start sm:mb-8">
             <button
               onClick={() => scrollToSection("projects")}
               className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25 flex items-center justify-center space-x-2"

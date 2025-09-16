@@ -60,7 +60,7 @@ export default function ContactForm() {
   return (
     <div
       data-aos="fade-left"
-      className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+      className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/10 w-full max-w-full overflow-hidden"
     >
       <h3 className="text-2xl font-bold text-white mb-6">Send me a message</h3>
       <form onSubmit={handleSubmit} className="space-y-6">

@@ -29,12 +29,12 @@ const ContactSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           {/* Contact Info */}
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             <div
               data-aos="fade-down"
-              className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+              className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/10 w-full max-w-full overflow-hidden"
             >
               <h3 className="text-2xl font-bold text-white mb-6">
                 Contact Information
@@ -97,7 +97,7 @@ const ContactSection: React.FC = () => {
             {/* Resume Download */}
             <div
               data-aos="fade-up"
-              className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
+              className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/10 w-full max-w-full overflow-hidden"
             >
               <h3 className="text-2xl font-bold text-white mb-4">Resume</h3>
               <p className="text-gray-400 mb-6">
