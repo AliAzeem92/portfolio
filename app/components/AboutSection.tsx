@@ -95,7 +95,7 @@ const AboutSection: React.FC = () => {
 
               <div className="mt-8">
                 <Link
-                  href="https://drive.usercontent.google.com/u/0/uc?id=1zD_F6SeUrQt1hIyC7k2_DnAV0rA95oEB&export=download"
+                  href="https://drive.usercontent.google.com/u/0/uc?id=1Fm2kNJYUsA7uP8pY1vdu03XNrviuXQII&export=download"
                   download="Ali_Azeem_CV.pdf"
                   className="group bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 px-6 py-3 rounded-lg transition-all duration-500 flex items-center space-x-2 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
                 >

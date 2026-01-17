@@ -4,6 +4,7 @@ import Shahab from "@/public/Projects/Shahab-Portfolio.png";
 import Movie from "@/public/Projects/movie-suggestion.png";
 import crud from "@/public/Projects/crud.png";
 import CurrencyConverter from "@/public/Projects/CurrencyConverter.jpg";
+import FollowPro from "@/public/Projects/follow-pro.png";
 
 export const roles = [
   "Full Stack Developer",
@@ -47,6 +48,27 @@ export const skills: SkillsCategory = {
 export const projects: Project[] = [
   {
     id: 1,
+    title: "FollowPro - Project Management System",
+    category: "Full Stack Web Application",
+    description:
+      "A comprehensive MERN stack project management system with role-based access control, JWT authentication, email verification, and real-time task management. Features admin dashboard for project oversight and user portal for task tracking.",
+    image: FollowPro,
+    technologies: [
+      "React.js",
+      "Node.js",
+      "Express.js",
+      "MongoDB",
+      "Prisma ORM",
+      "JWT Authentication",
+      "Tailwind CSS",
+      "Nodemailer",
+      "Vercel",
+    ],
+    liveUrl: "https://follow-pro.vercel.app/",
+    githubUrl: "https://github.com/AliAzeem92/Follow-Pro-Frontend",
+  },
+  {
+    id: 2,
     title: "Shahab Ahmad Portfolio",
     category: "Full Stack App",
     description:
@@ -61,24 +83,6 @@ export const projects: Project[] = [
     ],
     liveUrl: "https://shahabahmad.online/",
     githubUrl: "https://github.com/AliAzeem92/Shahab-Ahmad-Portfolio",
-  },
-  {
-    id: 2,
-    title: "Movie Suggestion",
-    category: "AI Application",
-    description:
-      "A movie recommendation app that suggests films based on user preferences, built with React, Node.js, and Tailwind CSS.",
-    image: Movie,
-    technologies: [
-      "React.js",
-      "REST API",
-      "Node.js",
-      "Express.js",
-      "Tailwind CSS",
-      "TypeScript",
-    ],
-    liveUrl: "https://ali-azeem-movie-suggestion-app.vercel.app/",
-    githubUrl: "https://github.com/AliAzeem92/Movie-Suggestion",
   },
   {
     id: 3,
@@ -100,6 +104,24 @@ export const projects: Project[] = [
   },
   {
     id: 4,
+    title: "Movie Suggestion",
+    category: "AI Application",
+    description:
+      "A movie recommendation app that suggests films based on user preferences, built with React, Node.js, and Tailwind CSS.",
+    image: Movie,
+    technologies: [
+      "React.js",
+      "REST API",
+      "Node.js",
+      "Express.js",
+      "Tailwind CSS",
+      "TypeScript",
+    ],
+    liveUrl: "https://ali-azeem-movie-suggestion-app.vercel.app/",
+    githubUrl: "https://github.com/AliAzeem92/Movie-Suggestion",
+  },
+  {
+    id: 5,
     title: "Currency Converter",
     category: "AI Application",
     description:

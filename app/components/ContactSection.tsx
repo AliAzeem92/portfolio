@@ -105,7 +105,7 @@ const ContactSection: React.FC = () => {
                 education, and technical skills.
               </p>
               <Link
-                href="https://drive.usercontent.google.com/u/0/uc?id=1zD_F6SeUrQt1hIyC7k2_DnAV0rA95oEB&export=download"
+                href="https://drive.usercontent.google.com/u/0/uc?id=1Fm2kNJYUsA7uP8pY1vdu03XNrviuXQII&export=download"
                 download="Ali_Azeem_CV.pdf"
                 className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 w-full justify-center"
               >
