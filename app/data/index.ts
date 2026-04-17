@@ -13,6 +13,7 @@ export const roles = [
   "Next.js Expert",
 ];
 
+
 export const skills: SkillsCategory = {
   frontend: [
     { name: "React", icon: "⚛️" },
