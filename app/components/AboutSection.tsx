@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   User,
   MapPin,
@@ -11,7 +11,38 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+interface AboutData {
+    bio1?: string;
+    bio2?: string;
+    projectsCount?: string;
+    yearsExperience?: string;
+    location?: string;
+    jobTitle?: string;
+    training?: string;
+    availability?: string;
+    resumeUrl?: string;
+  }
+
 const AboutSection: React.FC = () => {
+  const [aboutData, setAboutData] = useState<AboutData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fecthAboutData = async () => {
+      try {
+        const response = await fetch("/api/about");
+        if (!response.ok) {
+          throw new Error("Failed to fetch about data");
+        }
+        const data = await response.json();
+        setAboutData(data);
+      } catch (error: any) {
+        setError(error.message);
+      }
+    };
+    fecthAboutData();
+  }, []);
+
   return (
     <section id="about" className="py-20 px-6 bg-slate-900 relative">
       <div className="max-w-6xl mx-auto">
@@ -30,29 +61,24 @@ const AboutSection: React.FC = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div data-aos="fade-right" className="space-y-6">
             <p className="text-lg text-gray-300 leading-relaxed">
-              With over 2 years of experience in full-stack development, I
-              specialize in building scalable web applications that solve
-              real-world problems. My journey began with a curiosity about how
-              things work on the internet, and it has evolved into a passion for
-              creating seamless user experiences.
+              {aboutData?.bio1}
             </p>
 
             <p className="text-lg text-gray-300 leading-relaxed">
-              I believe in the power of clean code, thoughtful design, and
-              collaborative development. Whether working on a startup MVP or an
-              enterprise-level application, I bring the same level of dedication
-              and attention to detail.
+              {aboutData?.bio2}
             </p>
 
             <div className="grid grid-cols-2 gap-6 mt-8">
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
                 <div className="text-3xl font-bold text-purple-400 mb-2">
-                  10+
+                  {aboutData?.projectsCount}
                 </div>
                 <div className="text-gray-300">Projects Completed</div>
               </div>
               <div className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10">
-                <div className="text-3xl font-bold text-blue-400 mb-2">2+</div>
+                <div className="text-3xl font-bold text-blue-400 mb-2">
+                  {aboutData?.yearsExperience}
+                </div>
                 <div className="text-gray-300">Years Experience</div>
               </div>
             </div>
@@ -67,35 +93,35 @@ const AboutSection: React.FC = () => {
                 <div className="flex items-center space-x-3 group">
                   <MapPin className="w-5 h-5 text-purple-400 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300" />
                   <span className="text-gray-300 group-hover:text-white transition-colors duration-300">
-                    Faisalabad, Pakistan
+                    {aboutData?.location}
                   </span>
                 </div>
 
                 <div className="flex items-center space-x-3 group">
                   <Briefcase className="w-5 h-5 text-blue-400 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-300" />
                   <span className="text-gray-300 group-hover:text-white transition-colors duration-300">
-                    Full Stack Developer
+                    {aboutData?.jobTitle}
                   </span>
                 </div>
 
                 <div className="flex items-center space-x-3 group">
                   <Award className="w-5 h-5 text-yellow-400 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300" />
                   <span className="text-gray-300 group-hover:text-white transition-colors duration-300">
-                    Saylani Mass IT Trained
+                    {aboutData?.training}
                   </span>
                 </div>
 
                 <div className="flex items-center space-x-3 group">
                   <Calendar className="w-5 h-5 text-green-400 group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-300" />
                   <span className="text-gray-300 group-hover:text-white transition-colors duration-300">
-                    Available for new projects
+                    {aboutData?.availability}
                   </span>
                 </div>
               </div>
 
               <div className="mt-8">
                 <Link
-                  href="https://drive.usercontent.google.com/u/0/uc?id=1Fm2kNJYUsA7uP8pY1vdu03XNrviuXQII&export=download"
+                  href={aboutData?.resumeUrl || ""}
                   download="Ali_Azeem_CV.pdf"
                   className="group bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 px-6 py-3 rounded-lg transition-all duration-500 flex items-center space-x-2 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
                 >

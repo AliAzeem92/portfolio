@@ -1,69 +1,101 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GraduationCap, Calendar, MapPin, BookOpen, Star } from "lucide-react";
 
+interface EducationData {
+  id: string;
+  degree: string;
+  institution: string;
+  location: string;
+  duration: string;
+  gpa?: string;
+  status: string;
+  description: string;
+  coursework: string[];
+  color: string;
+}
+
 const EducationSection: React.FC = () => {
-  const educationData = [
-    {
-      id: 1,
-      degree: "Bachelor of Science in Computer Science",
-      institution:
-        "Government Graduate College Satiana Road (Peoples Colony # 2)",
-      location: "Faisalabad, Pakiatan",
-      duration: "2023 - 2027(Continouing)",
-      gpa: "3.1/4.0",
-      status: "Studying",
-      description:
-        "Specialized in Software Engineering and Web Development with focus on modern frameworks and algorithms.",
-      coursework: [
-        "Data Structures & Algorithms",
-        "Web Development",
-        "Database Systems",
-        "Software Engineering",
-        "Computer Networks",
-        "Machine Learning",
-      ],
-      color: "from-purple-500 to-blue-500",
-    },
-    {
-      id: 2,
-      degree: "Full Stack Web Development Bootcamp",
-      institution: "TechloSet Solutions",
-      location: "On site - Faisalabad, Pakistan",
-      duration: "2024 (Jan) - 2024 (May)",
-      status: "Certified",
-      description:
-        "Intensive 5-month program covering modern web technologies, focusing on React.js, Next.js, React Native and Node.js etc.",
-      coursework: [
-        "React & Next.js",
-        "Node.js & Express",
-        "MongoDB & Firebase",
-        "TypeScript",
-        "Tailwind CSS",
-        "RESTful APIs",
-        "UI/UX Design Principles",
-      ],
-      color: "from-green-500 to-teal-500",
-    },
-    {
-      id: 3,
-      degree: "Web & Mobile App Development",
-      institution: "Saylani Mass IT Training",
-      location: "On site - Faisalabad, Pakistan",
-      duration: "2022 - 2023",
-      status: "Certified",
-      description:
-        "Comprehensive training program focused on building modern web and mobile applications. Covered both frontend and backend technologies along with hands-on projects.",
-      coursework: [
-        "HTML, CSS & JavaScript",
-        "React.js & Next.js",
-        "React Native (Mobile Apps)",
-        "Node.js & Express",
-        "Firebase",
-        "RESTful APIs & State Management",
-      ],
-      color: "from-orange-500 to-red-500",
-    },
-  ];
+  const [educationData, setEducationData] = useState<EducationData[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchEductionData = async () => {
+      try {
+        const response = await fetch("/api/education");
+        if (!response.ok) {
+          throw new Error("Failed to fetch education data.");
+        }
+        const data = await response.json();
+        setEducationData(data);
+      } catch (error: any) {
+        setError(error.message);
+      }
+    };
+    fetchEductionData();
+  }, []);
+
+  // const educationData = [
+  //   {
+  //     id: 1,
+  //     degree: "Bachelor of Science in Computer Science",
+  //     institution:
+  //       "Government Graduate College Satiana Road (Peoples Colony # 2)",
+  //     location: "Faisalabad, Pakiatan",
+  //     duration: "2023 - 2027(Continouing)",
+  //     gpa: "3.1/4.0",
+  //     status: "Studying",
+  //     description:
+  //       "Specialized in Software Engineering and Web Development with focus on modern frameworks and algorithms.",
+  //     coursework: [
+  //       "Data Structures & Algorithms",
+  //       "Web Development",
+  //       "Database Systems",
+  //       "Software Engineering",
+  //       "Computer Networks",
+  //       "Machine Learning",
+  //     ],
+  //     color: "from-purple-500 to-blue-500",
+  //   },
+  //   {
+  //     id: 2,
+  //     degree: "Full Stack Web Development Bootcamp",
+  //     institution: "TechloSet Solutions",
+  //     location: "On site - Faisalabad, Pakistan",
+  //     duration: "2024 (Jan) - 2024 (May)",
+  //     status: "Certified",
+  //     description:
+  //       "Intensive 5-month program covering modern web technologies, focusing on React.js, Next.js, React Native and Node.js etc.",
+  //     coursework: [
+  //       "React & Next.js",
+  //       "Node.js & Express",
+  //       "MongoDB & Firebase",
+  //       "TypeScript",
+  //       "Tailwind CSS",
+  //       "RESTful APIs",
+  //       "UI/UX Design Principles",
+  //     ],
+  //     color: "from-green-500 to-teal-500",
+  //   },
+  //   {
+  //     id: 3,
+  //     degree: "Web & Mobile App Development",
+  //     institution: "Saylani Mass IT Training",
+  //     location: "On site - Faisalabad, Pakistan",
+  //     duration: "2022 - 2023",
+  //     status: "Certified",
+  //     description:
+  //       "Comprehensive training program focused on building modern web and mobile applications. Covered both frontend and backend technologies along with hands-on projects.",
+  //     coursework: [
+  //       "HTML, CSS & JavaScript",
+  //       "React.js & Next.js",
+  //       "React Native (Mobile Apps)",
+  //       "Node.js & Express",
+  //       "Firebase",
+  //       "RESTful APIs & State Management",
+  //     ],
+  //     color: "from-orange-500 to-red-500",
+  //   },
+  // ];
 
   return (
     <section id="education" className="px-6 bg-slate-900 relative">
@@ -87,7 +119,7 @@ const EducationSection: React.FC = () => {
 
         {/* Education Timeline */}
         <div className="space-y-12">
-          {educationData.map((edu, index) => (
+          {educationData?.map((edu, index) => (
             <div key={edu.id} className="relative">
               {/* Timeline Line */}
               {index !== educationData.length - 1 && (

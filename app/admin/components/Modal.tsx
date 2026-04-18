@@ -30,7 +30,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
       onClick={onClose}
     >
       <div
-        className={`bg-slate-800 border border-white/10 rounded-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto transition-all duration-300 ${
+        className={`bg-slate-800 border border-white/10 rounded-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] transition-all duration-300 ${
           visible
             ? "opacity-100 scale-100 translate-y-0"
             : "opacity-0 scale-95 translate-y-4"

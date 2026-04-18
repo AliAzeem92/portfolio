@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Sparkles, ArrowRight, ExternalLink, ChevronDown } from "lucide-react";
 import { roles } from "../data";
 import Navigation from "./Navigation";
@@ -19,6 +19,36 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   mousePosition,
   scrollToSection,
 }) => {
+  interface HeroData {
+    name?: string;
+    firstName?: string;
+    lastName?: string;
+    tagline?: string;
+    bio?: string;
+    roles?: string[] | string;
+    profileImage?: string;
+    isAvailable?: boolean;
+  }
+
+  const [heroData, setHeroData] = useState<HeroData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fecthHeroData = async () => {
+      try {
+        const response = await fetch("/api/hero");
+        if (!response.ok) {
+          throw new Error("Failed to fetch hero data");
+        }
+        const data = await response.json();
+        setHeroData(data);
+      } catch (error: any) {
+        setError(error.message);
+      }
+    };
+    fecthHeroData();
+  }, []);
+
   // Memoize background elements to prevent unnecessary re-renders
   const backgroundElements = useMemo(
     () => (
@@ -41,7 +71,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         />
       </>
     ),
-    [mousePosition.x, mousePosition.y]
+    [mousePosition.x, mousePosition.y],
   );
 
   return (
@@ -72,13 +102,13 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex items-center justify-center lg:justify-start space-x-2 sm:mb-6 ">
             <Sparkles className="w-6 h-6 text-yellow-400 animate-pulse" />
             <span className="text-purple-300 text-lg font-medium tracking-wide">
-              Hello, I&apos;m
+              {heroData?.tagline}
             </span>
           </div>
 
           <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold text-white sm:mb-4 leading-tight">
             <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-pulse">
-              Ali
+              {heroData?.name}
             </span>{" "}
             <span className="text-white">Azeem</span>
           </h1>
@@ -90,17 +120,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 key={currentRole}
                 className="inline-block animate-fadeIn text-white font-medium mx-2"
               >
-                {roles[currentRole]}
+                {/* {roles[currentRole]} */}
+                {heroData?.roles}
               </span>
               <span className="text-purple-400">{"/>"}</span>
             </h2>
           </div>
 
           <p className="text-lg lg:text-xl text-gray-300 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-            A developer who loves turning ideas into clean, modern, and
-            functional digital experiences. I build responsive websites and
-            applications using the latest technologies, focusing on design,
-            performance, and usability.
+            {heroData?.bio}
           </p>
 
           {/* CTA Buttons */}
@@ -132,13 +160,17 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Main image container */}
             <div className="relative w-64 h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96 rounded-2xl overflow-hidden border-2 border-white/20 group-hover:border-white/40 transition-all duration-500 transform group-hover:scale-105">
-              <Image
-                src={MyImage}
-                alt="Ali Azeem - Full Stack Developer"
-                className="w-full h-full object-cover object-center"
-                priority
-                placeholder="blur"
-              />
+              {heroData?.profileImage && (
+                <Image
+                  src={heroData?.profileImage}
+                  alt="Ali Azeem - Full Stack Developer"
+                  width={500}
+                  height={500}
+                  className="w-full h-full object-cover object-center"
+                  priority
+                // placeholder="blur"
+                />
+              )}
 
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>

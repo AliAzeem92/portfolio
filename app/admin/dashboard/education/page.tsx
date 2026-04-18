@@ -20,6 +20,14 @@ interface Education {
 
 const emptyForm = { degree: "", institution: "", location: "", duration: "", gpa: "", status: "", description: "", coursework: "", color: "from-purple-500 to-blue-500", order: 0 }
 
+const Field = ({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (v: string) => void; type?: string }) => (
+  <div>
+    <label className="block text-gray-400 text-sm mb-2">{label}</label>
+    <input type={type} value={value} onChange={(e) => onChange(e.target.value)}
+      className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+  </div>
+)
+
 export default function EducationAdminPage() {
   const [entries, setEntries] = useState<Education[]>([])
   const [form, setForm] = useState(emptyForm)
@@ -70,10 +78,11 @@ export default function EducationAdminPage() {
     setSaving(true)
     setMessage("")
     try {
+      const { id, createdAt, ...rest } = editForm as any;
       const res = await fetch(`/api/education/${editId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...editForm, coursework: editForm.coursework.split(",").map((c) => c.trim()) }),
+        body: JSON.stringify({ ...rest, coursework: editForm.coursework.split(",").map((c: string) => c.trim()) }),
       })
       if (res.ok) { setMessage("Updated successfully!"); setEditModal(false); fetchData() }
       else setMessage("Failed to update.")
@@ -89,13 +98,7 @@ export default function EducationAdminPage() {
     } catch { setMessage("Failed to delete.") }
   }
 
-  const Field = ({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (v: string) => void; type?: string }) => (
-    <div>
-      <label className="block text-gray-400 text-sm mb-2">{label}</label>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)}
-        className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
-    </div>
-  )
+
 
   if (loading) return <Loader />
 
