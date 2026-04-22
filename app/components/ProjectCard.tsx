@@ -17,11 +17,12 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 group"
     >
       {/* Project Image */}
-      <div className="relative group/image mb-6">
+      <div className="relative h-80 group/image mb-6">
         <Image
           src={project.image}
           alt={project.title}
-          className="w-full h-80 object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105"
+          fill
+          className=" object-cover rounded-2xl transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent rounded-2xl opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 flex items-end p-6">
           <div className="flex space-x-4">

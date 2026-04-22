@@ -1,12 +1,65 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Zap, Globe, Server, Layers } from "lucide-react";
-import { skills } from "../data";
+
+interface SkillData {
+  frontend: {
+    name: string;
+    icon: string;
+    level?: number;
+  }[];
+  backend: {
+    name: string;
+    icon: string;
+    level?: number;
+  }[];
+  tools: {
+    name: string;
+    icon: string;
+    level?: number;
+  }[];
+}
 
 const SkillsSection: React.FC = () => {
-  return (
+  const [skillData, setSkillData] = useState<SkillData>({ frontend: [], backend: [], tools: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchSkillData = async () => {
+      try {
+        const response = await fetch("/api/skills");
+        if (!response.ok) throw new Error("Failed to fetch skill data");
+        const data = await response.json();
+        const grouped = {
+          frontend: data.filter((s: any) => s.category === "frontend"),
+          backend: data.filter((s: any) => s.category === "backend"),
+          tools: data.filter((s: any) => s.category === "tools"),
+        };
+        setSkillData(grouped);
+      } catch {
+        setError("Failed to fetch skill data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSkillData();
+  }, []);
+
+  if (error) return (
     <section id="skills" className="py-20 px-6 bg-slate-900 relative">
+      <div className="max-w-6xl mx-auto text-center">
+        <p className="text-gray-400 text-lg">Unable to load skills. Please refresh the page.</p>
+      </div>
+    </section>
+  );
+
+  return (
+    <section
+      id="skills"
+      data-aos="fade-up"
+     className="py-20 px-6 bg-slate-900 relative">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div data-aos="fade-up" className="text-center mb-16">
@@ -26,13 +79,30 @@ const SkillsSection: React.FC = () => {
         </div>
 
         {/* Skills Grid */}
+        {loading ? (
+          <div className="grid lg:grid-cols-3 gap-8 animate-pulse">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="bg-white/5 rounded-2xl p-8 border border-white/10">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-12 h-12 bg-white/10 rounded-lg" />
+                  <div className="h-6 w-24 bg-white/10 rounded" />
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  {[...Array(6)].map((_, j) => (
+                    <div key={j} className="h-9 w-24 bg-white/10 rounded-lg" />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Frontend */}
           <SkillCard
             title="Frontend"
             icon={<Globe className="w-6 h-6 text-white" />}
             gradient="from-purple-500 to-pink-500"
-            skills={skills.frontend}
+            skills={skillData?.frontend}
             color="purple"
             aos="flip-left"
           />
@@ -42,7 +112,7 @@ const SkillsSection: React.FC = () => {
             title="Backend"
             icon={<Server className="w-6 h-6 text-white" />}
             gradient="from-blue-500 to-cyan-500"
-            skills={skills.backend}
+            skills={skillData?.backend}
             color="blue"
             aos="flip-left"
           />
@@ -52,11 +122,12 @@ const SkillsSection: React.FC = () => {
             title="Tools & DevOps"
             icon={<Layers className="w-6 h-6 text-white" />}
             gradient="from-green-500 to-teal-500"
-            skills={skills.tools}
+            skills={skillData?.tools}
             color="green"
             aos="flip-left"
           />
         </div>
+        )}
       </div>
     </section>
   );

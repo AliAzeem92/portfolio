@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
+import Toast from "../../components/Toast";
+import { useToast } from "../../hooks/useToast";
 
 export default function HeroAdminPage() {
   const [name, setName] = useState("")
@@ -12,7 +14,7 @@ export default function HeroAdminPage() {
   const [profileImage, setProfileImage] = useState("")
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState("")
+  const { toast, showToast, hideToast } = useToast()
 
   useEffect(() => {
     const fetchHeroData = async () => {
@@ -27,7 +29,7 @@ export default function HeroAdminPage() {
         setIsAvailable(data.isAvailable)
         setProfileImage(data.profileImage)
       } catch {
-        setMessage("Failed to fetch hero data")
+        showToast("Failed to fetch hero data", "error")
       } finally {
         setLoading(false)
       }
@@ -62,10 +64,10 @@ export default function HeroAdminPage() {
           isAvailable, profileImage,
         }),
       })
-      if (res.ok) setMessage("Saved successfully!")
-      else setMessage("Failed to save.")
+      if (res.ok) showToast("Saved successfully!", "success")
+      else showToast("Failed to save", "error")
     } catch {
-      setMessage("Something went wrong.")
+      showToast("Something went wrong", "error")
     } finally {
       setSaving(false)
     }
@@ -121,7 +123,7 @@ export default function HeroAdminPage() {
           <label htmlFor="available" className="text-gray-300">Available for work</label>
         </div>
 
-        {message && <p className={`text-sm ${message.includes("success") ? "text-green-400" : "text-red-400"}`}>{message}</p>}
+        {toast.visible && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
 
         <button onClick={handleSave} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
           {saving ? "Saving..." : "Save Changes"}

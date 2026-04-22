@@ -7,19 +7,13 @@ import ProjectsSection from "./components/ProjectsSection";
 import SkillsSection from "./components/SkillsSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
-import { roles } from "./data";
 import EducationSection from "./components/EducationSection";
 import FloatingWhatsApp from "./components/FloatingWhatsApp";
 
 const PortfolioSite: React.FC = () => {
-  const [currentRole, setCurrentRole] = useState(0);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const roleInterval = setInterval(() => {
-      setCurrentRole((prev) => (prev + 1) % roles.length);
-    }, 3000);
-
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
         x: (e.clientX / window.innerWidth) * 100,
@@ -29,7 +23,6 @@ const PortfolioSite: React.FC = () => {
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => {
-      clearInterval(roleInterval);
       window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
@@ -41,7 +34,6 @@ const PortfolioSite: React.FC = () => {
   return (
     <div className="bg-slate-900 text-white">
       <HeroSection
-        currentRole={currentRole}
         mousePosition={mousePosition}
         scrollToSection={scrollToSection}
       />

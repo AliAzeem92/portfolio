@@ -4,6 +4,7 @@ const sections = [
   { href: "/admin/dashboard/hero", label: "Hero", description: "Edit name, bio, roles, profile image" },
   { href: "/admin/dashboard/about", label: "About", description: "Edit bio, stats, location, resume" },
   { href: "/admin/dashboard/education", label: "Education", description: "Add, edit, delete education entries" },
+  { href: "/admin/dashboard/certificates", label: "Certificates", description: "Add, edit, delete certificates" },
   { href: "/admin/dashboard/projects", label: "Projects", description: "Add, edit, delete projects" },
   { href: "/admin/dashboard/skills", label: "Skills", description: "Add, edit, delete skills" },
   { href: "/admin/dashboard/contact", label: "Contact", description: "Edit email, phone, location" },

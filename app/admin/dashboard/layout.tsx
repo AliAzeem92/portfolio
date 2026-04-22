@@ -8,6 +8,7 @@ const links = [
   { href: "/admin/dashboard/hero", label: "Hero" },
   { href: "/admin/dashboard/about", label: "About" },
   { href: "/admin/dashboard/education", label: "Education" },
+  { href: "/admin/dashboard/certificates", label: "Certificates" },
   { href: "/admin/dashboard/projects", label: "Projects" },
   { href: "/admin/dashboard/skills", label: "Skills" },
   { href: "/admin/dashboard/contact", label: "Contact" },

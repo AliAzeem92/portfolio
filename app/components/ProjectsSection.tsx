@@ -1,11 +1,48 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Briefcase } from "lucide-react";
-import { projects } from "../data";
 import ProjectCard from "./ProjectCard";
 
+interface ProjectData {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  githubUrl: string;
+  liveUrl: string;
+}
+
 const ProjectsSection: React.FC = () => {
+  const [projectData, setProjectData] = useState<ProjectData[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const response = await fetch("/api/projects")
+        if (!response.ok) throw new Error("Failed to fetch project data")
+        const data = await response.json()
+        setProjectData(data)
+      } catch {
+        setError("Failed to fetch project data")
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchAboutData()
+  }, [])
+
+  if (error) return (
+    <section id="projects" className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-800 relative">
+      <div className="max-w-7xl mx-auto text-center">
+        <p className="text-gray-400 text-lg">Unable to load projects. Please refresh the page.</p>
+      </div>
+    </section>
+  );
+
   return (
     <section
       id="projects"
@@ -29,9 +66,27 @@ const ProjectsSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+          {loading ? (
+            <>
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="bg-white/5 rounded-2xl p-6 border border-white/10 animate-pulse">
+                  <div className="h-48 bg-white/10 rounded-2xl mb-6" />
+                  <div className="space-y-3">
+                    <div className="h-4 w-1/3 bg-white/10 rounded" />
+                    <div className="h-6 w-3/4 bg-white/10 rounded" />
+                    <div className="h-4 w-full bg-white/10 rounded" />
+                    <div className="h-4 w-5/6 bg-white/10 rounded" />
+                  </div>
+                </div>
+              ))}
+            </>
+          ) : (
+            <>
+              {projectData.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
+            </>
+          )}
         </div>
       </div>
     </section>

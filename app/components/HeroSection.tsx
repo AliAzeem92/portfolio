@@ -2,20 +2,15 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { Sparkles, ArrowRight, ExternalLink, ChevronDown } from "lucide-react";
-import { roles } from "../data";
 import Navigation from "./Navigation";
 import Image from "next/image";
-// import MyImage from "../../public/me.jpg";
-import MyImage from "../../public/me-bgblur.png";
 
 interface HeroSectionProps {
-  currentRole: number;
   mousePosition: { x: number; y: number };
   scrollToSection: (sectionId: string) => void;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
-  currentRole,
   mousePosition,
   scrollToSection,
 }) => {
@@ -31,7 +26,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   }
 
   const [heroData, setHeroData] = useState<HeroData | null>(null);
+  const [currentRole, setCurrentRole] = useState(0);
+  const [roleVisible, setRoleVisible] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fecthHeroData = async () => {
@@ -44,10 +42,25 @@ const HeroSection: React.FC<HeroSectionProps> = ({
         setHeroData(data);
       } catch (error: any) {
         setError(error.message);
+      } finally {
+        setLoading(false);
       }
     };
     fecthHeroData();
   }, []);
+
+  useEffect(() => {
+    if (heroData?.roles && Array.isArray(heroData.roles)) {
+      const roleInterval = setInterval(() => {
+        setRoleVisible(false);
+        setTimeout(() => {
+          setCurrentRole((prev) => (prev + 1) % (heroData.roles as string[]).length);
+          setRoleVisible(true);
+        }, 400);
+      }, 3000);
+      return () => clearInterval(roleInterval);
+    }
+  }, [heroData?.roles]);
 
   // Memoize background elements to prevent unnecessary re-renders
   const backgroundElements = useMemo(
@@ -97,6 +110,23 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
       {/* Hero Content */}
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 mx-10 lg:mx-20 pt-5 sm:pt-10">
+        {loading ? (
+          <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-12 animate-pulse">
+            <div className="flex-1 space-y-6">
+              <div className="h-6 w-40 bg-white/10 rounded-full" />
+              <div className="h-16 w-3/4 bg-white/10 rounded-xl" />
+              <div className="h-10 w-1/2 bg-white/10 rounded-xl" />
+              <div className="h-6 w-full bg-white/10 rounded-xl" />
+              <div className="h-6 w-5/6 bg-white/10 rounded-xl" />
+              <div className="flex gap-4">
+                <div className="h-14 w-40 bg-white/10 rounded-full" />
+                <div className="h-14 w-40 bg-white/10 rounded-full" />
+              </div>
+            </div>
+            <div className="w-64 h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96 bg-white/10 rounded-2xl flex-shrink-0" />
+          </div>
+        ) : (
+          <>
         {/* Left Content */}
         <div className="flex-1 text-center lg:text-left">
           <div className="flex items-center justify-center lg:justify-start space-x-2 sm:mb-6 ">
@@ -110,18 +140,21 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-pulse">
               {heroData?.name}
             </span>{" "}
-            <span className="text-white">Azeem</span>
+            {/* <span className="text-white">Azeem</span> */}
           </h1>
 
           <div className="h-16 lg:h-20 sm:mb-8 flex items-center justify-center lg:justify-start">
             <h2 className="text-xl lg:text-2xl xl:text-4xl text-gray-300 font-light">
               <span className="text-purple-400">{"<"}</span>
               <span
-                key={currentRole}
-                className="inline-block animate-fadeIn text-white font-medium mx-2"
+                className="inline-block text-white font-medium mx-2 transition-all duration-400"
+                style={{
+                  opacity: roleVisible ? 1 : 0,
+                  transform: roleVisible ? "translateY(0)" : "translateY(-10px)",
+                  transition: "opacity 0.4s ease, transform 0.4s ease",
+                }}
               >
-                {/* {roles[currentRole]} */}
-                {heroData?.roles}
+                {Array.isArray(heroData?.roles) ? heroData.roles[currentRole] : ""}
               </span>
               <span className="text-purple-400">{"/>"}</span>
             </h2>
@@ -171,7 +204,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 // placeholder="blur"
                 />
               )}
-
+  
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
@@ -204,6 +237,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             <ChevronDown className="w-6 h-6" />
           </button>
         </div>
+          </>
+        )}
       </div>
     </section>
   );

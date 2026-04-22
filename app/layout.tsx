@@ -14,8 +14,40 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ali Azeem",
-  description: "Ali Azeem's Portfolio Site.",
+  title: "Ali Azeem | Full Stack Developer",
+  description:
+    "Full Stack Developer specializing in React, Next.js, Node.js and MongoDB. Available for new projects.",
+  keywords: [
+    "Ali Azeem",
+    "Full Stack Developer",
+    "React",
+    "Next.js",
+    "Portfolio",
+  ],
+  authors: [{ name: "Ali Azeem" }],
+  openGraph: {
+    title: "Ali Azeem | Full Stack Developer",
+    description:
+      "Full Stack Developer specializing in React, Next.js, Node.js and MongoDB.",
+    url: "https://your-domain.com",
+    siteName: "Ali Azeem Portfolio",
+    images: [
+      {
+        url: "/me-bgblur.png",
+        width: 1200,
+        height: 630,
+        alt: "Ali Azeem - Full Stack Developer",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ali Azeem | Full Stack Developer",
+    description:
+      "Full Stack Developer specializing in React, Next.js, Node.js and MongoDB.",
+    images: ["/me-bgblur.png"],
+  },
 };
 
 export default function RootLayout({

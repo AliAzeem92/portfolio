@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Modal from "../../components/Modal";
 import Loader from "../../components/Loader";
+import Toast from "../../components/Toast";
+import { useToast } from "../../hooks/useToast";
 
 interface Education {
   id: string
@@ -36,7 +38,7 @@ export default function EducationAdminPage() {
   const [editModal, setEditModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState("")
+  const { toast, showToast, hideToast } = useToast()
 
   const fetchData = async () => {
     setLoading(true)
@@ -45,7 +47,7 @@ export default function EducationAdminPage() {
       const data = await res.json()
       setEntries(data)
     } catch {
-      setMessage("Failed to load data.")
+      showToast("Failed to load data.", "error")
     } finally {
       setLoading(false)
     }
@@ -62,9 +64,9 @@ export default function EducationAdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, coursework: form.coursework.split(",").map((c) => c.trim()) }),
       })
-      if (res.ok) { setMessage("Added successfully!"); setForm(emptyForm); fetchData() }
-      else setMessage("Failed to add.")
-    } catch { setMessage("Something went wrong.") }
+      if (res.ok) { showToast("Added successfully!", "success"); setForm(emptyForm); fetchData() }
+      else showToast("Failed to add.", "error")
+    } catch { showToast("Something went wrong.", "error") }
     finally { setSaving(false) }
   }
 
@@ -84,9 +86,9 @@ export default function EducationAdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...rest, coursework: editForm.coursework.split(",").map((c: string) => c.trim()) }),
       })
-      if (res.ok) { setMessage("Updated successfully!"); setEditModal(false); fetchData() }
-      else setMessage("Failed to update.")
-    } catch { setMessage("Something went wrong.") }
+      if (res.ok) { showToast("Updated successfully!", "success"); setEditModal(false); fetchData() }
+      else showToast("Failed to update.", "error")
+    } catch { showToast("Something went wrong.", "error") }
     finally { setSaving(false) }
   }
 
@@ -95,7 +97,7 @@ export default function EducationAdminPage() {
     try {
       await fetch(`/api/education/${id}`, { method: "DELETE" })
       fetchData()
-    } catch { setMessage("Failed to delete.") }
+    } catch { showToast("Failed to delete.", "error") }
   }
 
 
@@ -104,6 +106,7 @@ export default function EducationAdminPage() {
 
   return (
     <div>
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <h1 className="text-3xl font-bold text-white mb-8">Education Section</h1>
 
       {/* Add New */}
@@ -131,7 +134,7 @@ export default function EducationAdminPage() {
           <Field label="Color (Tailwind gradient)" value={form.color} onChange={(v) => setForm({ ...form, color: v })} />
           <Field label="Order" value={String(form.order)} onChange={(v) => setForm({ ...form, order: Number(v) })} type="number" />
         </div>
-        {message && <p className={`text-sm ${message.includes("success") ? "text-green-400" : "text-red-400"}`}>{message}</p>}
+        {/* toast replaces message */}
         <button onClick={handleAdd} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
           {saving ? "Adding..." : "Add Entry"}
         </button>

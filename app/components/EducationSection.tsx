@@ -14,8 +14,18 @@ interface EducationData {
   color: string;
 }
 
+interface CertificatesData {
+  name: string;
+  provider: string;
+  icon: string;
+  order: number;
+}
+
 const EducationSection: React.FC = () => {
   const [educationData, setEducationData] = useState<EducationData[]>([]);
+  const [certificatesData, setCertificatesData] = useState<CertificatesData[]>(
+    [],
+  );
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -34,68 +44,21 @@ const EducationSection: React.FC = () => {
     fetchEductionData();
   }, []);
 
-  // const educationData = [
-  //   {
-  //     id: 1,
-  //     degree: "Bachelor of Science in Computer Science",
-  //     institution:
-  //       "Government Graduate College Satiana Road (Peoples Colony # 2)",
-  //     location: "Faisalabad, Pakiatan",
-  //     duration: "2023 - 2027(Continouing)",
-  //     gpa: "3.1/4.0",
-  //     status: "Studying",
-  //     description:
-  //       "Specialized in Software Engineering and Web Development with focus on modern frameworks and algorithms.",
-  //     coursework: [
-  //       "Data Structures & Algorithms",
-  //       "Web Development",
-  //       "Database Systems",
-  //       "Software Engineering",
-  //       "Computer Networks",
-  //       "Machine Learning",
-  //     ],
-  //     color: "from-purple-500 to-blue-500",
-  //   },
-  //   {
-  //     id: 2,
-  //     degree: "Full Stack Web Development Bootcamp",
-  //     institution: "TechloSet Solutions",
-  //     location: "On site - Faisalabad, Pakistan",
-  //     duration: "2024 (Jan) - 2024 (May)",
-  //     status: "Certified",
-  //     description:
-  //       "Intensive 5-month program covering modern web technologies, focusing on React.js, Next.js, React Native and Node.js etc.",
-  //     coursework: [
-  //       "React & Next.js",
-  //       "Node.js & Express",
-  //       "MongoDB & Firebase",
-  //       "TypeScript",
-  //       "Tailwind CSS",
-  //       "RESTful APIs",
-  //       "UI/UX Design Principles",
-  //     ],
-  //     color: "from-green-500 to-teal-500",
-  //   },
-  //   {
-  //     id: 3,
-  //     degree: "Web & Mobile App Development",
-  //     institution: "Saylani Mass IT Training",
-  //     location: "On site - Faisalabad, Pakistan",
-  //     duration: "2022 - 2023",
-  //     status: "Certified",
-  //     description:
-  //       "Comprehensive training program focused on building modern web and mobile applications. Covered both frontend and backend technologies along with hands-on projects.",
-  //     coursework: [
-  //       "HTML, CSS & JavaScript",
-  //       "React.js & Next.js",
-  //       "React Native (Mobile Apps)",
-  //       "Node.js & Express",
-  //       "Firebase",
-  //       "RESTful APIs & State Management",
-  //     ],
-  //     color: "from-orange-500 to-red-500",
-  //   },
-  // ];
+  useEffect(() => {
+    const fetchCertificateData = async () => {
+      try {
+        const responce = await fetch("/api/certificates");
+        if (!responce.ok) {
+          throw new Error("Failed to fetch certificate data.");
+        }
+        const data = await responce.json();
+        setCertificatesData(data);
+      } catch (error: any) {
+        setError(error.message);
+      }
+    };
+    fetchCertificateData();
+  }, []);
 
   return (
     <section id="education" className="px-6 bg-slate-900 relative">
@@ -216,28 +179,7 @@ const EducationSection: React.FC = () => {
             Additional Certifications & Learning
           </h3>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                name: "Adobe Premiere Pro",
-                provider: "Adobe",
-                icon: "🎬",
-              },
-              {
-                name: "Adobe After Effects",
-                provider: "Adobe",
-                icon: "✨",
-              },
-              {
-                name: "Adobe Photoshop",
-                provider: "Adobe",
-                icon: "🖌️",
-              },
-              {
-                name: "Creative Video Editing",
-                provider: "Online Learning",
-                icon: "🎥",
-              },
-            ].map((cert, index) => (
+            {certificatesData?.map((cert, index) => (
               <div
                 key={index}
                 data-aos="flip-up"

@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Modal from "../../components/Modal";
 import Loader from "../../components/Loader";
+import Toast from "../../components/Toast";
+import { useToast } from "../../hooks/useToast";
 
 interface SocialLink {
   id: string
@@ -23,7 +25,7 @@ export default function SocialLinksAdminPage() {
   const [editModal, setEditModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState("")
+  const { toast, showToast, hideToast } = useToast()
 
   const fetchData = async () => {
     setLoading(true)
@@ -31,7 +33,7 @@ export default function SocialLinksAdminPage() {
       const res = await fetch("/api/social-links")
       const data = await res.json()
       setLinks(data)
-    } catch { setMessage("Failed to load.") }
+    } catch { showToast("Failed to load.", "error") }
     finally { setLoading(false) }
   }
 
@@ -46,9 +48,9 @@ export default function SocialLinksAdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       })
-      if (res.ok) { setMessage("Added successfully!"); setForm(emptyForm); fetchData() }
-      else setMessage("Failed to add.")
-    } catch { setMessage("Something went wrong.") }
+      if (res.ok) { showToast("Added successfully!", "success"); setForm(emptyForm); fetchData() }
+      else showToast("Failed to add.", "error")
+    } catch { showToast("Something went wrong.", "error") }
     finally { setSaving(false) }
   }
 
@@ -67,9 +69,9 @@ export default function SocialLinksAdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editForm),
       })
-      if (res.ok) { setMessage("Updated successfully!"); setEditModal(false); fetchData() }
-      else setMessage("Failed to update.")
-    } catch { setMessage("Something went wrong.") }
+      if (res.ok) { showToast("Updated successfully!", "success"); setEditModal(false); fetchData() }
+      else showToast("Failed to update.", "error")
+    } catch { showToast("Something went wrong.", "error") }
     finally { setSaving(false) }
   }
 
@@ -78,13 +80,14 @@ export default function SocialLinksAdminPage() {
     try {
       await fetch(`/api/social-links/${id}`, { method: "DELETE" })
       fetchData()
-    } catch { setMessage("Failed to delete.") }
+    } catch { showToast("Failed to delete.", "error") }
   }
 
   if (loading) return <Loader />
 
   return (
     <div>
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <h1 className="text-3xl font-bold text-white mb-8">Social Links</h1>
 
       {/* Add New */}
@@ -119,7 +122,7 @@ export default function SocialLinksAdminPage() {
               className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
           </div>
         </div>
-        {message && <p className={`text-sm ${message.includes("success") ? "text-green-400" : "text-red-400"}`}>{message}</p>}
+        {/* message removed - using toast */}
         <button onClick={handleAdd} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
           {saving ? "Adding..." : "Add Link"}
         </button>

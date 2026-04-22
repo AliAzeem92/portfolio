@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
+import Toast from "../../components/Toast";
+import { useToast } from "../../hooks/useToast";
 
 export default function AboutAdminPage() {
   const [bio1, setBio1] = useState("")
@@ -15,7 +17,7 @@ export default function AboutAdminPage() {
   const [resumeUrl, setResumeUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState("")
+  const { toast, showToast, hideToast } = useToast()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,7 +35,7 @@ export default function AboutAdminPage() {
         setAvailability(data.availability)
         setResumeUrl(data.resumeUrl)
       } catch {
-        setMessage("Failed to load data.")
+        showToast("Failed to load data.", "error")
       } finally {
         setLoading(false)
       }
@@ -43,17 +45,16 @@ export default function AboutAdminPage() {
 
   const handleSave = async () => {
     setSaving(true)
-    setMessage("")
     try {
       const res = await fetch("/api/about", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bio1, bio2, projectsCount, yearsExperience, location, jobTitle, training, availability, resumeUrl }),
       })
-      if (res.ok) setMessage("Saved successfully!")
-      else setMessage("Failed to save.")
+      if (res.ok) showToast("Saved successfully!", "success")
+      else showToast("Failed to save.", "error")
     } catch {
-      setMessage("Something went wrong.")
+      showToast("Something went wrong.", "error")
     } finally {
       setSaving(false)
     }
@@ -63,21 +64,19 @@ export default function AboutAdminPage() {
 
   return (
     <div>
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <h1 className="text-3xl font-bold text-white mb-8">About Section</h1>
       <div className="bg-slate-800 border border-white/10 rounded-xl p-8 space-y-6">
-
         <div>
           <label className="block text-gray-400 text-sm mb-2">Bio Paragraph 1</label>
           <textarea rows={4} value={bio1} onChange={(e) => setBio1(e.target.value)}
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500 resize-none" />
         </div>
-
         <div>
           <label className="block text-gray-400 text-sm mb-2">Bio Paragraph 2</label>
           <textarea rows={4} value={bio2} onChange={(e) => setBio2(e.target.value)}
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500 resize-none" />
         </div>
-
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Projects Count</label>
@@ -90,7 +89,6 @@ export default function AboutAdminPage() {
               className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
           </div>
         </div>
-
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Location</label>
@@ -103,7 +101,6 @@ export default function AboutAdminPage() {
               className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
           </div>
         </div>
-
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Training</label>
@@ -116,19 +113,14 @@ export default function AboutAdminPage() {
               className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
           </div>
         </div>
-
         <div>
           <label className="block text-gray-400 text-sm mb-2">Resume URL</label>
           <input type="text" value={resumeUrl} onChange={(e) => setResumeUrl(e.target.value)}
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
         </div>
-
-        {message && <p className={`text-sm ${message.includes("success") ? "text-green-400" : "text-red-400"}`}>{message}</p>}
-
         <button onClick={handleSave} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
           {saving ? "Saving..." : "Save Changes"}
         </button>
-
       </div>
     </div>
   )

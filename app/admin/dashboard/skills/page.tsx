@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import Modal from "../../components/Modal";
 import Loader from "../../components/Loader";
+import Toast from "../../components/Toast";
+import { useToast } from "../../hooks/useToast";
 
 interface Skill {
   id: string
@@ -22,7 +24,7 @@ export default function SkillsAdminPage() {
   const [editModal, setEditModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState("")
+  const { toast, showToast, hideToast } = useToast()
 
   const fetchData = async () => {
     setLoading(true)
@@ -30,7 +32,7 @@ export default function SkillsAdminPage() {
       const res = await fetch("/api/skills")
       const data = await res.json()
       setSkills(data)
-    } catch { setMessage("Failed to load.") }
+    } catch { showToast("Failed to load.", "error") }
     finally { setLoading(false) }
   }
 
@@ -45,9 +47,9 @@ export default function SkillsAdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       })
-      if (res.ok) { setMessage("Added successfully!"); setForm(emptyForm); fetchData() }
-      else setMessage("Failed to add.")
-    } catch { setMessage("Something went wrong.") }
+      if (res.ok) { showToast("Added successfully!", "success"); setForm(emptyForm); fetchData() }
+      else showToast("Failed to add.", "error")
+    } catch { showToast("Something went wrong.", "error") }
     finally { setSaving(false) }
   }
 
@@ -61,14 +63,15 @@ export default function SkillsAdminPage() {
     setSaving(true)
     setMessage("")
     try {
+      const { id, ...rest } = editForm as any
       const res = await fetch(`/api/skills/${editId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(editForm),
+        body: JSON.stringify(rest),
       })
-      if (res.ok) { setMessage("Updated successfully!"); setEditModal(false); fetchData() }
-      else setMessage("Failed to update.")
-    } catch { setMessage("Something went wrong.") }
+      if (res.ok) { showToast("Updated successfully!", "success"); setEditModal(false); fetchData() }
+      else showToast("Failed to update.", "error")
+    } catch { showToast("Something went wrong.", "error") }
     finally { setSaving(false) }
   }
 
@@ -77,7 +80,7 @@ export default function SkillsAdminPage() {
     try {
       await fetch(`/api/skills/${id}`, { method: "DELETE" })
       fetchData()
-    } catch { setMessage("Failed to delete.") }
+    } catch { showToast("Failed to delete.", "error") }
   }
 
   const categories = ["frontend", "backend", "tools"]
@@ -86,6 +89,7 @@ export default function SkillsAdminPage() {
 
   return (
     <div>
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <h1 className="text-3xl font-bold text-white mb-8">Skills Section</h1>
 
       {/* Add New */}
@@ -119,7 +123,7 @@ export default function SkillsAdminPage() {
               className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
           </div>
         </div>
-        {message && <p className={`text-sm ${message.includes("success") ? "text-green-400" : "text-red-400"}`}>{message}</p>}
+        {/* message removed - using toast */}
         <button onClick={handleAdd} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
           {saving ? "Adding..." : "Add Skill"}
         </button>

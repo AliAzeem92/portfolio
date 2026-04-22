@@ -1,15 +1,80 @@
 "use client";
 
-import React from "react";
-import { Mail, Phone, MapPin, Download } from "lucide-react";
-import { socialLinks } from "../data";
+import React, { useEffect, useState } from "react";
+import { Phone, MapPin, Download, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import ContactForm from "./ContactForm";
 
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Github: Github,
+  Linkedin: Linkedin,
+  Mail: Mail,
+};
+
+interface ConatctData {
+  email: string;
+  phone: string;
+  address: string;
+  location: string;
+  resumeUrl: string;
+}
+
+interface SocialLinksData {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  color: string;
+  order: number;
+}
+
 const ContactSection: React.FC = () => {
+  const [contactData, setContactData] = useState<ConatctData | null>(null);
+  const [socialLinks, setSocialLinks] = useState<SocialLinksData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchContactData = async () => {
+      try {
+        const response = await fetch("/api/contact");
+        if (!response.ok) throw new Error("Failed to fetch contact data");
+        const data = await response.json();
+        setContactData(data);
+      } catch {
+        setError("Failed to fetch contact data");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchContactData();
+  }, []);
+
+  useEffect(() => {
+    const fetchSocialLinks = async () => {
+      try {
+        const response = await fetch("/api/social-links");
+        if (!response.ok) throw new Error("Failed to fetch social links");
+        const data = await response.json();
+        setSocialLinks(data);
+      } catch {
+        setError("Failed to fetch social links");
+      }
+    };
+    fetchSocialLinks();
+  }, []);
+
+  if (error) return (
+    <section id="contact" className="py-20 px-6 bg-gradient-to-b from-slate-800 to-slate-900 relative">
+      <div className="max-w-4xl mx-auto text-center">
+        <p className="text-gray-400 text-lg">Unable to load contact info. Please refresh the page.</p>
+      </div>
+    </section>
+  );
+
   return (
     <section
       id="contact"
+      data-aos="fade-up"
       className="py-20 px-6 bg-gradient-to-b from-slate-800 to-slate-900 relative"
     >
       <div className="max-w-4xl mx-auto">
@@ -30,6 +95,33 @@ const ContactSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+          {loading ? (
+            <div className="space-y-6 animate-pulse">
+              <div className="bg-white/5 rounded-2xl p-8 border border-white/10 space-y-4">
+                <div className="h-6 w-48 bg-white/10 rounded" />
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-white/10 rounded-lg" />
+                    <div className="space-y-2">
+                      <div className="h-3 w-16 bg-white/10 rounded" />
+                      <div className="h-4 w-40 bg-white/10 rounded" />
+                    </div>
+                  </div>
+                ))}
+                <div className="flex space-x-4 mt-4">
+                  {[...Array(3)].map((_, i) => (
+                    <div key={i} className="w-12 h-12 bg-white/10 rounded-lg" />
+                  ))}
+                </div>
+              </div>
+              <div className="bg-white/5 rounded-2xl p-8 border border-white/10 space-y-4">
+                <div className="h-6 w-32 bg-white/10 rounded" />
+                <div className="h-4 w-full bg-white/10 rounded" />
+                <div className="h-12 w-full bg-white/10 rounded-lg" />
+              </div>
+            </div>
+          ) : (
+          <>
           {/* Contact Info */}
           <div className="space-y-6 sm:space-y-8">
             <div
@@ -46,9 +138,7 @@ const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <div className="text-gray-400 text-sm">Email</div>
-                    <div className="text-white">
-                      aliazeemaliazeem786@gmail.com
-                    </div>
+                    <div className="text-white">{contactData?.email}</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -57,9 +147,7 @@ const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <div className="text-gray-400 text-sm">Phone</div>
-                    <div className="text-white">
-                      +92 321-8515137, +92 310-6104748
-                    </div>
+                    <div className="text-white">{contactData?.phone}</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
@@ -68,7 +156,7 @@ const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <div className="text-gray-400 text-sm">Location</div>
-                    <div className="text-white">Faisalabad, Pakistan</div>
+                    <div className="text-white">{contactData?.location}</div>
                   </div>
                 </div>
               </div>
@@ -79,17 +167,20 @@ const ContactSection: React.FC = () => {
                   Connect With Me
                 </h4>
                 <div className="flex space-x-4">
-                  {socialLinks.map(({ icon: Icon, href, label, color }) => (
-                    <Link
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      className={`group w-12 h-12 bg-gradient-to-br ${color} rounded-lg flex items-center justify-center text-white hover:scale-110 transition-all duration-300 hover:shadow-lg`}
-                      aria-label={label}
-                    >
-                      <Icon className="w-6 h-6 group-hover:scale-110 transition-transform" />
-                    </Link>
-                  ))}
+                  {socialLinks?.map(({ icon, href, label, color }) => {
+                    const IconComponent = iconMap[icon] || Mail;
+                    return (
+                      <Link
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        className={`group w-12 h-12 bg-gradient-to-br ${color} rounded-lg flex items-center justify-center text-white hover:scale-110 transition-all duration-300 hover:shadow-lg`}
+                        aria-label={label}
+                      >
+                        <IconComponent className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -105,7 +196,7 @@ const ContactSection: React.FC = () => {
                 education, and technical skills.
               </p>
               <Link
-                href="https://drive.usercontent.google.com/u/0/uc?id=1Fm2kNJYUsA7uP8pY1vdu03XNrviuXQII&export=download"
+                href={contactData?.resumeUrl || ""}
                 download="Ali_Azeem_CV.pdf"
                 className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 w-full justify-center"
               >
@@ -114,6 +205,8 @@ const ContactSection: React.FC = () => {
               </Link>
             </div>
           </div>
+          </>
+          )}
 
           {/* Contact Form */}
           <ContactForm />
