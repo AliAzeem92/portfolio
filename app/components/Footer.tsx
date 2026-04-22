@@ -5,9 +5,12 @@ import { Code } from "lucide-react";
 
 interface FooterProps {
   scrollToSection: (sectionId: string) => void;
+  name?: string | null;
 }
 
-const Footer: React.FC<FooterProps> = ({ scrollToSection }) => {
+const Footer: React.FC<FooterProps> = ({ scrollToSection, name }) => {
+  const nameSkeleton = <div className="h-4 w-24 bg-white/10 rounded animate-pulse inline-block" />;
+
   return (
     <footer
       data-aos="fade-down"
@@ -19,38 +22,23 @@ const Footer: React.FC<FooterProps> = ({ scrollToSection }) => {
             <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
               <Code className="w-4 h-4 text-white" />
             </div>
-            <span className="text-white font-bold">Ali Azeem</span>
+            {name === null || name === undefined ? (
+              <div className="h-4 w-24 bg-white/10 rounded animate-pulse" />
+            ) : (
+              <span className="text-white font-bold">{name}</span>
+            )}
           </div>
 
           <div className="text-gray-400 text-sm">
-            © {new Date().getFullYear()} Ali Azeem. All rights reserved.
+            © {new Date().getFullYear()}{" "}
+            {name === null || name === undefined ? nameSkeleton : name}. All rights reserved.
           </div>
 
           <div className="flex space-x-6 text-gray-400 text-sm">
-            <button
-              onClick={() => scrollToSection("about")}
-              className="hover:text-white transition-colors"
-            >
-              About
-            </button>
-            <button
-              onClick={() => scrollToSection("projects")}
-              className="hover:text-white transition-colors"
-            >
-              Projects
-            </button>
-            <button
-              onClick={() => scrollToSection("skills")}
-              className="hover:text-white transition-colors"
-            >
-              Skills
-            </button>
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="hover:text-white transition-colors"
-            >
-              Contact
-            </button>
+            <button onClick={() => scrollToSection("about")} className="hover:text-white transition-colors">About</button>
+            <button onClick={() => scrollToSection("projects")} className="hover:text-white transition-colors">Projects</button>
+            <button onClick={() => scrollToSection("skills")} className="hover:text-white transition-colors">Skills</button>
+            <button onClick={() => scrollToSection("contact")} className="hover:text-white transition-colors">Contact</button>
           </div>
         </div>
       </div>

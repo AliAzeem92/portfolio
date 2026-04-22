@@ -53,7 +53,6 @@ export default function HeroAdminPage() {
 
   const handleSave = async () => {
     setSaving(true)
-    setMessage("")
     try {
       const res = await fetch("/api/hero", {
         method: "PUT",

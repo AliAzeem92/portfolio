@@ -5,9 +5,10 @@ import { Code } from "lucide-react";
 
 interface NavigationProps {
   scrollToSection: (sectionId: string) => void;
+  name?: string | null;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ scrollToSection }) => {
+const Navigation: React.FC<NavigationProps> = ({ scrollToSection, name }) => {
   return (
     <nav className="relative z-10 flex flex-col md:flex-row justify-between items-center p-4 sm:p-6 lg:p-8 md:mx-12">
       {/* Logo (hidden on mobile) */}
@@ -15,7 +16,11 @@ const Navigation: React.FC<NavigationProps> = ({ scrollToSection }) => {
         <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
           <Code className="w-6 h-6 text-white" />
         </div>
-        <span className="text-white font-bold text-xl">Ali Azeem</span>
+        {name === null || name === undefined ? (
+          <div className="h-5 w-28 bg-white/10 rounded animate-pulse" />
+        ) : (
+          <span className="text-white font-bold text-xl">{name}</span>
+        )}
       </div>
 
       {/* Navigation Buttons */}

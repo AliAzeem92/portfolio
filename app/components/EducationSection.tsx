@@ -18,6 +18,7 @@ interface CertificatesData {
   name: string;
   provider: string;
   icon: string;
+  iconUrl: string;
   order: number;
 }
 
@@ -185,8 +186,18 @@ const EducationSection: React.FC = () => {
                 data-aos="flip-up"
                 className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 group text-center"
               >
-                <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">
-                  {cert.icon}
+                <div className="flex justify-center mb-3 group-hover:scale-110 transition-transform">
+                  {cert.iconUrl ? (
+                    <img
+                      src={cert.iconUrl}
+                      alt={cert.name}
+                      width={40}
+                      height={40}
+                      className="w-10 h-10 object-contain"
+                    />
+                  ) : (
+                    <span className="text-3xl">{cert.icon}</span>
+                  )}
                 </div>
                 <h4 className="text-white font-semibold mb-1">{cert.name}</h4>
                 <p className="text-purple-400 text-sm mb-1">{cert.provider}</p>

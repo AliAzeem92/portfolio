@@ -8,6 +8,8 @@ import { useToast } from "../../hooks/useToast";
 export default function ContactAdminPage() {
   const [email, setEmail] = useState("")
   const [phone, setPhone] = useState("")
+  const [primaryPhone, setPrimaryPhone] = useState("")
+  const [secondaryPhone, setSecondaryPhone] = useState("")
   const [location, setLocation] = useState("")
   const [resumeUrl, setResumeUrl] = useState("")
   const [loading, setLoading] = useState(false)
@@ -22,6 +24,8 @@ export default function ContactAdminPage() {
         const data = await res.json()
         setEmail(data.email)
         setPhone(data.phone)
+        setPrimaryPhone(data.primaryPhone || "")
+        setSecondaryPhone(data.secondaryPhone || "")
         setLocation(data.location)
         setResumeUrl(data.resumeUrl)
       } catch {
@@ -39,7 +43,7 @@ export default function ContactAdminPage() {
       const res = await fetch("/api/contact", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, phone, location, resumeUrl }),
+        body: JSON.stringify({ email, phone, primaryPhone, secondaryPhone, location, resumeUrl }),
       })
       if (res.ok) showToast("Saved successfully!", "success")
       else showToast("Failed to save.", "error")
@@ -65,6 +69,16 @@ export default function ContactAdminPage() {
         <div>
           <label className="block text-gray-400 text-sm mb-2">Phone</label>
           <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)}
+            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+        </div>
+        <div>
+          <label className="block text-gray-400 text-sm mb-2">Primary Phone (WhatsApp)</label>
+          <input type="text" value={primaryPhone} onChange={(e) => setPrimaryPhone(e.target.value)}
+            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+        </div>
+        <div>
+          <label className="block text-gray-400 text-sm mb-2">Secondary Phone (Optional)</label>
+          <input type="text" value={secondaryPhone} onChange={(e) => setSecondaryPhone(e.target.value)}
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
         </div>
         <div>

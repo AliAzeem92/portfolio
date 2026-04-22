@@ -93,7 +93,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       data-aos="fade-down"
       className="relative min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 overflow-hidden"
     >
-      <Navigation scrollToSection={scrollToSection} />
+      <Navigation scrollToSection={scrollToSection} name={heroData?.name ?? null} />
 
       {/* Animated Background Elements */}
       <div className="absolute inset-0 opacity-50">{backgroundElements}</div>

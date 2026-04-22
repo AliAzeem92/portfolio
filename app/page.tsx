@@ -12,6 +12,19 @@ import FloatingWhatsApp from "./components/FloatingWhatsApp";
 
 const PortfolioSite: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [primaryPhone, setPrimaryPhone] = useState<string>("");
+  const [siteName, setSiteName] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/contact")
+      .then((r) => r.json())
+      .then((d) => setPrimaryPhone(d.primaryPhone || ""))
+      .catch(() => {});
+    fetch("/api/hero")
+      .then((r) => r.json())
+      .then((d) => setSiteName(d.name || "Ali Azeem"))
+      .catch(() => setSiteName("Ali Azeem"));
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -44,7 +57,7 @@ const PortfolioSite: React.FC = () => {
       <SkillsSection />
       <ContactSection />
 
-      <Footer scrollToSection={scrollToSection} />
+      <Footer scrollToSection={scrollToSection} name={siteName} />
 
       {/* Custom animations */}
       <style jsx>{`
@@ -72,10 +85,12 @@ const PortfolioSite: React.FC = () => {
           }
         }
       `}</style>
-      <FloatingWhatsApp
-        phoneNumber="923218515137"
-        message="Hi! I have a question."
-      />
+      {primaryPhone && (
+        <FloatingWhatsApp
+          phoneNumber={primaryPhone}
+          message="Hi! I have a question."
+        />
+      )}
     </div>
   );
 };

@@ -11,10 +11,26 @@ interface Certificate {
   name: string;
   provider: string;
   icon: string;
+  iconUrl: string;
   order: number;
 }
 
-const emptyForm = { name: "", provider: "", icon: "", order: 0 };
+const emptyForm = { name: "", provider: "", icon: "", iconUrl: "", order: 0 };
+
+async function uploadToCloudinary(file: File): Promise<string> {
+  const base64 = await new Promise<string>((resolve) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+  });
+  const res = await fetch("/api/upload", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ image: base64 }),
+  });
+  const data = await res.json();
+  return data.url;
+}
 
 export default function CertificatesAdminPage() {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
@@ -24,6 +40,7 @@ export default function CertificatesAdminPage() {
   const [editModal, setEditModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const { toast, showToast, hideToast } = useToast();
 
   const fetchData = async () => {
@@ -41,9 +58,21 @@ export default function CertificatesAdminPage() {
 
   useEffect(() => { fetchData(); }, []);
 
+  const handleIconUpload = async (file: File, isEdit = false) => {
+    setUploading(true);
+    try {
+      const url = await uploadToCloudinary(file);
+      if (isEdit) setEditForm((prev) => ({ ...prev, iconUrl: url }));
+      else setForm((prev) => ({ ...prev, iconUrl: url }));
+    } catch {
+      showToast("Image upload failed.", "error");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleAdd = async () => {
     setSaving(true);
-    setMessage("");
     try {
       const res = await fetch("/api/certificates", {
         method: "POST",
@@ -67,7 +96,6 @@ export default function CertificatesAdminPage() {
 
   const handleUpdate = async () => {
     setSaving(true);
-    setMessage("");
     try {
       const { id, ...rest } = editForm as any;
       const res = await fetch(`/api/certificates/${editId}`, {
@@ -94,6 +122,28 @@ export default function CertificatesAdminPage() {
     }
   };
 
+  const IconUploadField = ({
+    iconUrl,
+    onUpload,
+  }: {
+    iconUrl: string;
+    onUpload: (file: File) => void;
+  }) => (
+    <div>
+      <label className="block text-gray-400 text-sm mb-2">Icon Image</label>
+      {iconUrl && (
+        <img src={iconUrl} alt="icon preview" className="w-12 h-12 object-contain rounded-lg mb-2 bg-white/5 p-1" />
+      )}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => e.target.files?.[0] && onUpload(e.target.files[0])}
+        className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none"
+      />
+      {uploading && <p className="text-purple-400 text-xs mt-1">Uploading...</p>}
+    </div>
+  );
+
   if (loading) return <Loader />;
 
   return (
@@ -117,18 +167,13 @@ export default function CertificatesAdminPage() {
           </div>
         </div>
         <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="block text-gray-400 text-sm mb-2">Icon (emoji)</label>
-            <input type="text" value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
-          </div>
+          <IconUploadField iconUrl={form.iconUrl} onUpload={(f) => handleIconUpload(f, false)} />
           <div>
             <label className="block text-gray-400 text-sm mb-2">Order</label>
             <input type="number" value={form.order} onChange={(e) => setForm({ ...form, order: Number(e.target.value) })}
               className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
           </div>
         </div>
-        {/* message removed - using toast */}
         <button onClick={handleAdd} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
           {saving ? "Adding..." : "Add Certificate"}
         </button>
@@ -140,7 +185,11 @@ export default function CertificatesAdminPage() {
         {certificates.map((cert) => (
           <div key={cert.id} className="bg-slate-800 border border-white/10 rounded-xl p-6 flex justify-between items-center">
             <div className="flex items-center gap-4">
-              <span className="text-3xl">{cert.icon}</span>
+              {cert.iconUrl ? (
+                <img src={cert.iconUrl} alt={cert.name} className="w-10 h-10 object-contain rounded-lg bg-white/5 p-1" />
+              ) : (
+                <span className="text-3xl">{cert.icon}</span>
+              )}
               <div>
                 <p className="text-white font-medium">{cert.name}</p>
                 <p className="text-gray-400 text-sm">{cert.provider}</p>
@@ -170,11 +219,7 @@ export default function CertificatesAdminPage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-gray-400 text-sm mb-2">Icon (emoji)</label>
-              <input type="text" value={editForm.icon} onChange={(e) => setEditForm({ ...editForm, icon: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
-            </div>
+            <IconUploadField iconUrl={editForm.iconUrl} onUpload={(f) => handleIconUpload(f, true)} />
             <div>
               <label className="block text-gray-400 text-sm mb-2">Order</label>
               <input type="number" value={editForm.order} onChange={(e) => setEditForm({ ...editForm, order: Number(e.target.value) })}
