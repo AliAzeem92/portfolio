@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     siteName: "Ali Azeem Portfolio",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/me-bgblur.png`,
+        url: `${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/AliAzeemBanner.png`,
         width: 1200,
         height: 630,
         alt: "Ali Azeem - Full Stack Developer",
