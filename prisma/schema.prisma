@@ -72,10 +72,9 @@ model Project {
 
 model Skill {
   id      String @id @default(auto()) @map("_id") @db.ObjectId
-  name    String
+  name    String @default("")
   icon    String @default("")
   iconUrl String @default("")
-  category String // "frontend" | "backend" | "tools"
   order   Int    @default(0)
 }
 
@@ -91,7 +90,6 @@ model SocialLink {
 model Contact {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   email          String
-  phone          String
   primaryPhone   String   @default("")
   secondaryPhone String?
   location       String

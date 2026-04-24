@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { User, MapPin, Briefcase, Award, Calendar, Download } from "lucide-react";
 import Link from "next/link";
 
@@ -16,28 +16,12 @@ interface AboutData {
   resumeUrl?: string;
 }
 
-const AboutSection: React.FC = () => {
-  const [aboutData, setAboutData] = useState<AboutData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface AboutSectionProps {
+  aboutData: AboutData | null;
+}
 
-  useEffect(() => {
-    const fetchAboutData = async () => {
-      try {
-        const response = await fetch("/api/about");
-        if (!response.ok) throw new Error("Failed to fetch about data");
-        const data = await response.json();
-        setAboutData(data);
-      } catch {
-        setError("Failed to fetch about data");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAboutData();
-  }, []);
-
-  if (error) return (
+const AboutSection: React.FC<AboutSectionProps> = ({ aboutData }) => {
+  if (!aboutData) return (
     <section id="about" className="py-20 px-6 bg-slate-900 relative">
       <div className="max-w-6xl mx-auto text-center">
         <p className="text-gray-400 text-lg">Unable to load this section. Please refresh the page.</p>
@@ -60,22 +44,7 @@ const AboutSection: React.FC = () => {
           </h2>
         </div>
 
-        {loading ? (
-          <div className="grid lg:grid-cols-2 gap-12 items-center animate-pulse">
-            <div className="space-y-6">
-              <div className="h-5 w-full bg-white/10 rounded-xl" />
-              <div className="h-5 w-5/6 bg-white/10 rounded-xl" />
-              <div className="h-5 w-full bg-white/10 rounded-xl" />
-              <div className="h-5 w-4/6 bg-white/10 rounded-xl" />
-              <div className="grid grid-cols-2 gap-6 mt-8">
-                <div className="h-24 bg-white/10 rounded-xl" />
-                <div className="h-24 bg-white/10 rounded-xl" />
-              </div>
-            </div>
-            <div className="h-64 bg-white/10 rounded-2xl" />
-          </div>
-        ) : (
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div data-aos="fade-right" className="space-y-6">
               <p className="text-lg text-gray-300 leading-relaxed">{aboutData?.bio1}</p>
               <p className="text-lg text-gray-300 leading-relaxed">{aboutData?.bio2}</p>
@@ -124,7 +93,6 @@ const AboutSection: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
       </div>
     </section>
   );

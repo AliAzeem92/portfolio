@@ -2,9 +2,19 @@
 
 import React from "react";
 import { Eye, Github } from "lucide-react";
-import { Project } from "../types";
 import Image from "next/image";
 import Link from "next/link";
+
+interface Project {
+  id: string | number;
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+  technologies: string[];
+  liveUrl: string;
+  githubUrl: string;
+}
 
 interface ProjectCardProps {
   project: Project;

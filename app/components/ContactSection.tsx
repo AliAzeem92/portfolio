@@ -5,7 +5,7 @@ import { Phone, MapPin, Download, Github, Linkedin, Mail } from "lucide-react";
 import Link from "next/link";
 import ContactForm from "./ContactForm";
 
-const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+const iconMap: Record<string, React.FC<{ className?: string }>> = {
   Github: Github,
   Linkedin: Linkedin,
   Mail: Mail,
@@ -13,8 +13,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 interface ConatctData {
   email: string;
-  phone: string;
-  address: string;
+  primaryPhone: string;
+  secondaryPhone?: string;
   location: string;
   resumeUrl: string;
 }
@@ -22,7 +22,7 @@ interface ConatctData {
 interface SocialLinksData {
   label: string;
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: string;
   color: string;
   order: number;
 }
@@ -147,7 +147,10 @@ const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <div className="text-gray-400 text-sm">Phone</div>
-                    <div className="text-white">{contactData?.phone}</div>
+                    <div className="text-white">
+                      {contactData?.primaryPhone}
+                      {contactData?.secondaryPhone && `, ${contactData.secondaryPhone}`}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">

@@ -41,7 +41,6 @@ export default function SocialLinksAdminPage() {
 
   const handleAdd = async () => {
     setSaving(true)
-    setMessage("")
     try {
       const res = await fetch("/api/social-links", {
         method: "POST",
@@ -62,7 +61,6 @@ export default function SocialLinksAdminPage() {
 
   const handleUpdate = async () => {
     setSaving(true)
-    setMessage("")
     try {
       const res = await fetch(`/api/social-links/${editId}`, {
         method: "PUT",

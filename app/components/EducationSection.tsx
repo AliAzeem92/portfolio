@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { GraduationCap, Calendar, MapPin, BookOpen, Star } from "lucide-react";
 
 interface EducationData {
@@ -7,7 +7,7 @@ interface EducationData {
   institution: string;
   location: string;
   duration: string;
-  gpa?: string;
+  gpa?: string | null;
   status: string;
   description: string;
   coursework: string[];
@@ -22,44 +22,12 @@ interface CertificatesData {
   order: number;
 }
 
-const EducationSection: React.FC = () => {
-  const [educationData, setEducationData] = useState<EducationData[]>([]);
-  const [certificatesData, setCertificatesData] = useState<CertificatesData[]>(
-    [],
-  );
-  const [error, setError] = useState<string | null>(null);
+interface EducationSectionProps {
+  educationData: EducationData[];
+  certificatesData: CertificatesData[];
+}
 
-  useEffect(() => {
-    const fetchEductionData = async () => {
-      try {
-        const response = await fetch("/api/education");
-        if (!response.ok) {
-          throw new Error("Failed to fetch education data.");
-        }
-        const data = await response.json();
-        setEducationData(data);
-      } catch (error: any) {
-        setError(error.message);
-      }
-    };
-    fetchEductionData();
-  }, []);
-
-  useEffect(() => {
-    const fetchCertificateData = async () => {
-      try {
-        const responce = await fetch("/api/certificates");
-        if (!responce.ok) {
-          throw new Error("Failed to fetch certificate data.");
-        }
-        const data = await responce.json();
-        setCertificatesData(data);
-      } catch (error: any) {
-        setError(error.message);
-      }
-    };
-    fetchCertificateData();
-  }, []);
+const EducationSection: React.FC<EducationSectionProps> = ({ educationData, certificatesData }) => {
 
   return (
     <section id="education" className="px-6 bg-slate-900 relative">
@@ -179,12 +147,12 @@ const EducationSection: React.FC = () => {
           <h3 className="text-2xl font-bold text-white mb-8 text-center">
             Additional Certifications & Learning
           </h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="flex flex-wrap justify-center gap-6">
             {certificatesData?.map((cert, index) => (
               <div
                 key={index}
                 data-aos="flip-up"
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 group text-center"
+                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 group text-center w-full sm:w-56"
               >
                 <div className="flex justify-center mb-3 group-hover:scale-110 transition-transform">
                   {cert.iconUrl ? (

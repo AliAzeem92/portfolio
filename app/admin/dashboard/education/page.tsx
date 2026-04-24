@@ -57,7 +57,6 @@ export default function EducationAdminPage() {
 
   const handleAdd = async () => {
     setSaving(true)
-    setMessage("")
     try {
       const res = await fetch("/api/education", {
         method: "POST",
@@ -78,7 +77,6 @@ export default function EducationAdminPage() {
 
   const handleUpdate = async () => {
     setSaving(true)
-    setMessage("")
     try {
       const { id, createdAt, ...rest } = editForm as any;
       const res = await fetch(`/api/education/${editId}`, {

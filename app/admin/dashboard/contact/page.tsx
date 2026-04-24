@@ -7,7 +7,6 @@ import { useToast } from "../../hooks/useToast";
 
 export default function ContactAdminPage() {
   const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
   const [primaryPhone, setPrimaryPhone] = useState("")
   const [secondaryPhone, setSecondaryPhone] = useState("")
   const [location, setLocation] = useState("")
@@ -17,24 +16,18 @@ export default function ContactAdminPage() {
   const { toast, showToast, hideToast } = useToast()
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const res = await fetch("/api/contact")
-        const data = await res.json()
-        setEmail(data.email)
-        setPhone(data.phone)
+    setLoading(true)
+    fetch("/api/contact")
+      .then((r) => r.json())
+      .then((data) => {
+        setEmail(data.email || "")
         setPrimaryPhone(data.primaryPhone || "")
         setSecondaryPhone(data.secondaryPhone || "")
-        setLocation(data.location)
-        setResumeUrl(data.resumeUrl)
-      } catch {
-        showToast("Failed to load data.", "error")
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchData()
+        setLocation(data.location || "")
+        setResumeUrl(data.resumeUrl || "")
+      })
+      .catch(() => showToast("Failed to load data.", "error"))
+      .finally(() => setLoading(false))
   }, [])
 
   const handleSave = async () => {
@@ -43,7 +36,7 @@ export default function ContactAdminPage() {
       const res = await fetch("/api/contact", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, phone, primaryPhone, secondaryPhone, location, resumeUrl }),
+        body: JSON.stringify({ email, primaryPhone, secondaryPhone, location, resumeUrl }),
       })
       if (res.ok) showToast("Saved successfully!", "success")
       else showToast("Failed to save.", "error")
@@ -54,6 +47,8 @@ export default function ContactAdminPage() {
     }
   }
 
+  const inputCls = "w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500";
+
   if (loading) return <Loader />
 
   return (
@@ -63,33 +58,23 @@ export default function ContactAdminPage() {
       <div className="bg-slate-800 border border-white/10 rounded-xl p-8 space-y-6">
         <div>
           <label className="block text-gray-400 text-sm mb-2">Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
-        </div>
-        <div>
-          <label className="block text-gray-400 text-sm mb-2">Phone</label>
-          <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} />
         </div>
         <div>
           <label className="block text-gray-400 text-sm mb-2">Primary Phone (WhatsApp)</label>
-          <input type="text" value={primaryPhone} onChange={(e) => setPrimaryPhone(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+          <input type="text" value={primaryPhone} onChange={(e) => setPrimaryPhone(e.target.value)} className={inputCls} />
         </div>
         <div>
           <label className="block text-gray-400 text-sm mb-2">Secondary Phone (Optional)</label>
-          <input type="text" value={secondaryPhone} onChange={(e) => setSecondaryPhone(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+          <input type="text" value={secondaryPhone} onChange={(e) => setSecondaryPhone(e.target.value)} className={inputCls} />
         </div>
         <div>
           <label className="block text-gray-400 text-sm mb-2">Location</label>
-          <input type="text" value={location} onChange={(e) => setLocation(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+          <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} className={inputCls} />
         </div>
         <div>
           <label className="block text-gray-400 text-sm mb-2">Resume URL</label>
-          <input type="text" value={resumeUrl} onChange={(e) => setResumeUrl(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+          <input type="text" value={resumeUrl} onChange={(e) => setResumeUrl(e.target.value)} className={inputCls} />
         </div>
         <button onClick={handleSave} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
           {saving ? "Saving..." : "Save Changes"}

@@ -5,6 +5,7 @@ import Modal from "../../components/Modal";
 import Loader from "../../components/Loader";
 import Toast from "../../components/Toast";
 import { useToast } from "../../hooks/useToast";
+import ImageUploadBox from "../../components/ImageUploadBox";
 
 interface Certificate {
   id: string;
@@ -28,8 +29,7 @@ async function uploadToCloudinary(file: File): Promise<string> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ image: base64 }),
   });
-  const data = await res.json();
-  return data.url;
+  return (await res.json()).url;
 }
 
 export default function CertificatesAdminPage() {
@@ -38,37 +38,35 @@ export default function CertificatesAdminPage() {
   const [editForm, setEditForm] = useState(emptyForm);
   const [editId, setEditId] = useState("");
   const [editModal, setEditModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [editUploading, setEditUploading] = useState(false);
   const { toast, showToast, hideToast } = useToast();
 
-  const fetchData = async () => {
-    setLoading(true);
+  const fetchData = async (silent = false) => {
+    if (!silent) setInitialLoading(true);
     try {
       const res = await fetch("/api/certificates");
-      const data = await res.json();
-      setCertificates(data);
-    } catch {
-      showToast("Failed to load.", "error");
-    } finally {
-      setLoading(false);
-    }
+      setCertificates(await res.json());
+    } catch { showToast("Failed to load.", "error"); }
+    finally { setInitialLoading(false); }
   };
 
   useEffect(() => { fetchData(); }, []);
 
-  const handleIconUpload = async (file: File, isEdit = false) => {
+  const handleAddUpload = async (file: File) => {
     setUploading(true);
-    try {
-      const url = await uploadToCloudinary(file);
-      if (isEdit) setEditForm((prev) => ({ ...prev, iconUrl: url }));
-      else setForm((prev) => ({ ...prev, iconUrl: url }));
-    } catch {
-      showToast("Image upload failed.", "error");
-    } finally {
-      setUploading(false);
-    }
+    try { const url = await uploadToCloudinary(file); setForm((p) => ({ ...p, iconUrl: url })); }
+    catch { showToast("Upload failed.", "error"); }
+    finally { setUploading(false); }
+  };
+
+  const handleEditUpload = async (file: File) => {
+    setEditUploading(true);
+    try { const url = await uploadToCloudinary(file); setEditForm((p) => ({ ...p, iconUrl: url })); }
+    catch { showToast("Upload failed.", "error"); }
+    finally { setEditUploading(false); }
   };
 
   const handleAdd = async () => {
@@ -79,20 +77,13 @@ export default function CertificatesAdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      if (res.ok) { showToast("Added successfully!", "success"); setForm(emptyForm); fetchData(); }
+      if (res.ok) { showToast("Added!", "success"); setForm(emptyForm); fetchData(true); }
       else showToast("Failed to add.", "error");
-    } catch {
-      showToast("Something went wrong.", "error");
-    } finally {
-      setSaving(false);
-    }
+    } catch { showToast("Something went wrong.", "error"); }
+    finally { setSaving(false); }
   };
 
-  const handleEdit = (cert: Certificate) => {
-    setEditId(cert.id);
-    setEditForm({ ...cert });
-    setEditModal(true);
-  };
+  const handleEdit = (cert: Certificate) => { setEditId(cert.id); setEditForm({ ...cert }); setEditModal(true); };
 
   const handleUpdate = async () => {
     setSaving(true);
@@ -103,48 +94,24 @@ export default function CertificatesAdminPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(rest),
       });
-      if (res.ok) { showToast("Updated successfully!", "success"); setEditModal(false); fetchData(); }
+      if (res.ok) { showToast("Updated!", "success"); setEditModal(false); fetchData(true); }
       else showToast("Failed to update.", "error");
-    } catch {
-      showToast("Something went wrong.", "error");
-    } finally {
-      setSaving(false);
-    }
+    } catch { showToast("Something went wrong.", "error"); }
+    finally { setSaving(false); }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this certificate?")) return;
+    setCertificates((prev) => prev.filter((c) => c.id !== id));
     try {
       await fetch(`/api/certificates/${id}`, { method: "DELETE" });
-      fetchData();
-    } catch {
-      showToast("Failed to delete.", "error");
-    }
+      showToast("Deleted.", "success");
+    } catch { showToast("Failed to delete.", "error"); fetchData(true); }
   };
 
-  const IconUploadField = ({
-    iconUrl,
-    onUpload,
-  }: {
-    iconUrl: string;
-    onUpload: (file: File) => void;
-  }) => (
-    <div>
-      <label className="block text-gray-400 text-sm mb-2">Icon Image</label>
-      {iconUrl && (
-        <img src={iconUrl} alt="icon preview" className="w-12 h-12 object-contain rounded-lg mb-2 bg-white/5 p-1" />
-      )}
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => e.target.files?.[0] && onUpload(e.target.files[0])}
-        className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none"
-      />
-      {uploading && <p className="text-purple-400 text-xs mt-1">Uploading...</p>}
-    </div>
-  );
+  const inputCls = "w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500";
 
-  if (loading) return <Loader />;
+  if (initialLoading) return <Loader />;
 
   return (
     <div>
@@ -157,21 +124,21 @@ export default function CertificatesAdminPage() {
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Certificate Name</label>
-            <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+            <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
           </div>
           <div>
             <label className="block text-gray-400 text-sm mb-2">Provider</label>
-            <input type="text" value={form.provider} onChange={(e) => setForm({ ...form, provider: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+            <input type="text" value={form.provider} onChange={(e) => setForm({ ...form, provider: e.target.value })} className={inputCls} />
           </div>
         </div>
         <div className="grid grid-cols-2 gap-6">
-          <IconUploadField iconUrl={form.iconUrl} onUpload={(f) => handleIconUpload(f, false)} />
           <div>
+            <label className="block text-gray-400 text-sm mb-2">Certificate Image</label>
+            <ImageUploadBox value={form.iconUrl} onChange={handleAddUpload} uploading={uploading} aspectRatio="square" />
+          </div>
+          <div className="flex flex-col justify-end">
             <label className="block text-gray-400 text-sm mb-2">Order</label>
-            <input type="number" value={form.order} onChange={(e) => setForm({ ...form, order: Number(e.target.value) })}
-              className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+            <input type="number" value={form.order} onChange={(e) => setForm({ ...form, order: Number(e.target.value) })} className={inputCls} />
           </div>
         </div>
         <button onClick={handleAdd} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
@@ -179,25 +146,31 @@ export default function CertificatesAdminPage() {
         </button>
       </div>
 
-      {/* Existing Certificates */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-white">Existing Certificates</h2>
+      {/* Existing Certificates — 3-column card grid */}
+      <h2 className="text-xl font-semibold text-white mb-4">Existing Certificates</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {certificates.map((cert) => (
-          <div key={cert.id} className="bg-slate-800 border border-white/10 rounded-xl p-6 flex justify-between items-center">
-            <div className="flex items-center gap-4">
+          <div key={cert.id} className="bg-slate-800 border border-white/10 rounded-xl overflow-hidden flex flex-col">
+            {/* Image */}
+            <div className="h-40 bg-slate-700 flex items-center justify-center p-4">
               {cert.iconUrl ? (
-                <img src={cert.iconUrl} alt={cert.name} className="w-10 h-10 object-contain rounded-lg bg-white/5 p-1" />
+                <img src={cert.iconUrl} alt={cert.name} className="h-full w-full object-contain" />
+              ) : cert.icon ? (
+                <span className="text-5xl">{cert.icon}</span>
               ) : (
-                <span className="text-3xl">{cert.icon}</span>
+                <div className="text-gray-500 text-sm">No image</div>
               )}
-              <div>
-                <p className="text-white font-medium">{cert.name}</p>
-                <p className="text-gray-400 text-sm">{cert.provider}</p>
-              </div>
             </div>
-            <div className="flex gap-3">
-              <button onClick={() => handleEdit(cert)} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors">Edit</button>
-              <button onClick={() => handleDelete(cert.id)} className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors">Delete</button>
+            {/* Info + Actions */}
+            <div className="p-4 flex flex-col gap-3 flex-1">
+              <div>
+                <p className="text-white font-semibold">{cert.name}</p>
+                {cert.provider && <p className="text-gray-400 text-sm">{cert.provider}</p>}
+              </div>
+              <div className="flex gap-2 mt-auto">
+                <button onClick={() => handleEdit(cert)} className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors">Edit</button>
+                <button onClick={() => handleDelete(cert.id)} className="flex-1 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors">Delete</button>
+              </div>
             </div>
           </div>
         ))}
@@ -206,33 +179,27 @@ export default function CertificatesAdminPage() {
       {/* Edit Modal */}
       <Modal isOpen={editModal} onClose={() => setEditModal(false)} title="Edit Certificate">
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-gray-400 text-sm mb-2">Certificate Name</label>
-              <input type="text" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
-            </div>
-            <div>
-              <label className="block text-gray-400 text-sm mb-2">Provider</label>
-              <input type="text" value={editForm.provider} onChange={(e) => setEditForm({ ...editForm, provider: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
-            </div>
+          <div>
+            <label className="block text-gray-400 text-sm mb-2">Certificate Name</label>
+            <input type="text" value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} className={inputCls} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <IconUploadField iconUrl={editForm.iconUrl} onUpload={(f) => handleIconUpload(f, true)} />
-            <div>
-              <label className="block text-gray-400 text-sm mb-2">Order</label>
-              <input type="number" value={editForm.order} onChange={(e) => setEditForm({ ...editForm, order: Number(e.target.value) })}
-                className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
-            </div>
+          <div>
+            <label className="block text-gray-400 text-sm mb-2">Provider</label>
+            <input type="text" value={editForm.provider} onChange={(e) => setEditForm({ ...editForm, provider: e.target.value })} className={inputCls} />
+          </div>
+          <div>
+            <label className="block text-gray-400 text-sm mb-2">Certificate Image</label>
+            <ImageUploadBox value={editForm.iconUrl} onChange={handleEditUpload} uploading={editUploading} aspectRatio="square" />
+          </div>
+          <div>
+            <label className="block text-gray-400 text-sm mb-2">Order</label>
+            <input type="number" value={editForm.order} onChange={(e) => setEditForm({ ...editForm, order: Number(e.target.value) })} className={inputCls} />
           </div>
           <div className="flex gap-4 mt-2">
             <button onClick={handleUpdate} className="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-semibold transition-colors">
               {saving ? "Saving..." : "Save Changes"}
             </button>
-            <button onClick={() => setEditModal(false)} className="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-lg font-semibold transition-colors">
-              Cancel
-            </button>
+            <button onClick={() => setEditModal(false)} className="flex-1 bg-slate-700 hover:bg-slate-600 text-white py-3 rounded-lg font-semibold transition-colors">Cancel</button>
           </div>
         </div>
       </Modal>

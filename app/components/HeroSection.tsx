@@ -5,49 +5,28 @@ import { Sparkles, ArrowRight, ExternalLink, ChevronDown } from "lucide-react";
 import Navigation from "./Navigation";
 import Image from "next/image";
 
+interface HeroData {
+  name?: string;
+  tagline?: string;
+  bio?: string;
+  roles?: string[] | string;
+  profileImage?: string;
+  isAvailable?: boolean;
+}
+
 interface HeroSectionProps {
   mousePosition: { x: number; y: number };
   scrollToSection: (sectionId: string) => void;
+  heroData: HeroData | null;
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({
   mousePosition,
   scrollToSection,
+  heroData,
 }) => {
-  interface HeroData {
-    name?: string;
-    firstName?: string;
-    lastName?: string;
-    tagline?: string;
-    bio?: string;
-    roles?: string[] | string;
-    profileImage?: string;
-    isAvailable?: boolean;
-  }
-
-  const [heroData, setHeroData] = useState<HeroData | null>(null);
   const [currentRole, setCurrentRole] = useState(0);
   const [roleVisible, setRoleVisible] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fecthHeroData = async () => {
-      try {
-        const response = await fetch("/api/hero");
-        if (!response.ok) {
-          throw new Error("Failed to fetch hero data");
-        }
-        const data = await response.json();
-        setHeroData(data);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fecthHeroData();
-  }, []);
 
   useEffect(() => {
     if (heroData?.roles && Array.isArray(heroData.roles)) {
@@ -110,23 +89,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
       {/* Hero Content */}
       <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 mx-10 lg:mx-20 pt-5 sm:pt-10">
-        {loading ? (
-          <div className="flex flex-col lg:flex-row items-center justify-between w-full gap-12 animate-pulse">
-            <div className="flex-1 space-y-6">
-              <div className="h-6 w-40 bg-white/10 rounded-full" />
-              <div className="h-16 w-3/4 bg-white/10 rounded-xl" />
-              <div className="h-10 w-1/2 bg-white/10 rounded-xl" />
-              <div className="h-6 w-full bg-white/10 rounded-xl" />
-              <div className="h-6 w-5/6 bg-white/10 rounded-xl" />
-              <div className="flex gap-4">
-                <div className="h-14 w-40 bg-white/10 rounded-full" />
-                <div className="h-14 w-40 bg-white/10 rounded-full" />
-              </div>
-            </div>
-            <div className="w-64 h-64 lg:w-80 lg:h-80 xl:w-96 xl:h-96 bg-white/10 rounded-2xl flex-shrink-0" />
-          </div>
-        ) : (
-          <>
         {/* Left Content */}
         <div className="flex-1 text-center lg:text-left">
           <div className="flex items-center justify-center lg:justify-start space-x-2 sm:mb-6 ">
@@ -237,8 +199,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             <ChevronDown className="w-6 h-6" />
           </button>
         </div>
-          </>
-        )}
       </div>
     </section>
   );

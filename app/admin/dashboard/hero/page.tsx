@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
 import Toast from "../../components/Toast";
 import { useToast } from "../../hooks/useToast";
+import ImageUploadBox from "../../components/ImageUploadBox";
 
 export default function HeroAdminPage() {
   const [name, setName] = useState("")
@@ -14,40 +15,44 @@ export default function HeroAdminPage() {
   const [profileImage, setProfileImage] = useState("")
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const { toast, showToast, hideToast } = useToast()
 
   useEffect(() => {
-    const fetchHeroData = async () => {
-      setLoading(true)
-      try {
-        const res = await fetch("/api/hero")
-        const data = await res.json()
+    setLoading(true)
+    fetch("/api/hero")
+      .then((r) => r.json())
+      .then((data) => {
         setName(data.name)
         setTagline(data.tagline)
         setBio(data.bio)
         setRoles(data.roles.join(", "))
         setIsAvailable(data.isAvailable)
         setProfileImage(data.profileImage)
-      } catch {
-        showToast("Failed to fetch hero data", "error")
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchHeroData()
+      })
+      .catch(() => showToast("Failed to fetch hero data", "error"))
+      .finally(() => setLoading(false))
   }, [])
 
   const handleImageUpload = async (file: File) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = async () => {
+    setUploading(true)
+    const base64 = await new Promise<string>((resolve) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result as string)
+    })
+    try {
       const res = await fetch("/api/upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: reader.result }),
+        body: JSON.stringify({ image: base64 }),
       })
       const data = await res.json()
       setProfileImage(data.url)
+    } catch {
+      showToast("Image upload failed", "error")
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -76,43 +81,44 @@ export default function HeroAdminPage() {
 
   return (
     <div>
+      {toast.visible && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <h1 className="text-3xl font-bold text-white mb-8">Hero Section</h1>
       <div className="bg-slate-800 border border-white/10 rounded-xl p-8 space-y-6">
 
         <div>
           <label className="block text-gray-400 text-sm mb-2">Full Name</label>
           <input type="text" value={name} onChange={(e) => setName(e.target.value)}
-            placeholder="Ali Azeem"
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
         </div>
 
         <div>
           <label className="block text-gray-400 text-sm mb-2">Tagline</label>
           <input type="text" value={tagline} onChange={(e) => setTagline(e.target.value)}
-            placeholder="Hello, I'm"
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
         </div>
 
         <div>
           <label className="block text-gray-400 text-sm mb-2">Bio</label>
           <textarea rows={4} value={bio} onChange={(e) => setBio(e.target.value)}
-            placeholder="A developer who loves turning ideas into..."
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500 resize-none" />
         </div>
 
         <div>
           <label className="block text-gray-400 text-sm mb-2">Roles (comma separated)</label>
           <input type="text" value={roles} onChange={(e) => setRoles(e.target.value)}
-            placeholder="Full Stack Developer, React Specialist, ..."
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
         </div>
 
         <div>
           <label className="block text-gray-400 text-sm mb-2">Profile Image</label>
-          {profileImage && <img src={profileImage} alt="Profile" className="w-24 h-24 rounded-lg object-cover mb-3" />}
-          <input type="file" accept="image/*"
-            onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])}
-            className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
+          <div className="w-48">
+            <ImageUploadBox
+              value={profileImage}
+              onChange={handleImageUpload}
+              uploading={uploading}
+              aspectRatio="square"
+            />
+          </div>
         </div>
 
         <div className="flex items-center gap-3">
@@ -122,12 +128,9 @@ export default function HeroAdminPage() {
           <label htmlFor="available" className="text-gray-300">Available for work</label>
         </div>
 
-        {toast.visible && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
-
         <button onClick={handleSave} className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
           {saving ? "Saving..." : "Save Changes"}
         </button>
-
       </div>
     </div>
   )
