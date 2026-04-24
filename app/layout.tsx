@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     title: "Ali Azeem | Full Stack Developer",
     description:
       "Full Stack Developer specializing in React, Next.js, Node.js and MongoDB.",
-    images: ["/me-bgblur.png"],
+    images: ["/AliAzeemBanner.png"],
   },
 };
 
