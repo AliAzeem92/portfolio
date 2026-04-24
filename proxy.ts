@@ -1,18 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (pathname === "/admin/login") return NextResponse.next();
 
   try {
     const token = req.cookies.get("admin-token")?.value;
-    if (!token)
-        return NextResponse.redirect(new URL("/admin/login", req.url));
+    if (!token) return NextResponse.redirect(new URL("/admin/login", req.url));
     await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET));
     return NextResponse.next();
   } catch {
-        return NextResponse.redirect(new URL("/admin/login", req.url));
+    return NextResponse.redirect(new URL("/admin/login", req.url));
   }
 }
 
