@@ -88,7 +88,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
       />
 
       {/* Hero Content */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 mx-10 lg:mx-20 pt-5 sm:pt-10">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 mx-10 lg:mx-20 pt-5 sm:pt-10 pb-24 lg:pb-0">
         {/* Left Content */}
         <div className="flex-1 text-center lg:text-left">
           <div className="flex items-center justify-center lg:justify-start space-x-2 sm:mb-6 ">
@@ -101,8 +101,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold text-white sm:mb-4 leading-tight">
             <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-pulse">
               {heroData?.name}
-            </span>{" "}
-            {/* <span className="text-white">Azeem</span> */}
+            </span>
           </h1>
 
           <div className="h-16 lg:h-20 sm:mb-8 flex items-center justify-center lg:justify-start">
@@ -122,7 +121,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             </h2>
           </div>
 
-          <p className="text-lg lg:text-xl text-gray-300 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+          <p className="text-md lg:text-xl text-gray-300 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
             {heroData?.bio}
           </p>
 
@@ -182,7 +181,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Status indicator */}
           <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-green-500/20 backdrop-blur-sm border border-green-500/40 rounded-full px-4 py-2 flex items-center space-x-2">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-green-300 text-sm font-medium">
+            <span className="text-green-300 text-sm font-medium whitespace-nowrap">
               Available for work
             </span>
           </div>

@@ -45,16 +45,18 @@ const PortfolioClient: React.FC<PortfolioClientProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 text-white">
-      <HeroSection
-        mousePosition={mousePosition}
-        scrollToSection={scrollToSection}
-        heroData={heroData}
-      />
+    <div className="bg-slate-900 text-white relative">
+      <div className="overflow-x-hidden w-full">
+        <HeroSection
+          mousePosition={mousePosition}
+          scrollToSection={scrollToSection}
+          heroData={heroData}
+        />
 
-      {children}
+        {children}
 
-      <Footer scrollToSection={scrollToSection} name={siteName} />
+        <Footer scrollToSection={scrollToSection} name={siteName} />
+      </div>
 
       {primaryPhone && (
         <FloatingWhatsApp

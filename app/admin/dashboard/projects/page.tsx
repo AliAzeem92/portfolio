@@ -145,7 +145,7 @@ export default function ProjectsAdminPage() {
       {/* Add New */}
       <div className="bg-slate-800 border border-white/10 rounded-xl p-8 space-y-6 mb-8">
         <h2 className="text-xl font-semibold text-purple-400">Add New Project</h2>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Field label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
           <Field label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v })} />
         </div>
@@ -159,7 +159,7 @@ export default function ProjectsAdminPage() {
           <ImageUploadBox value={form.image} onChange={handleAddImageUpload} uploading={uploading} aspectRatio="wide" />
         </div>
         <Field label="Technologies (comma separated)" value={form.technologies} onChange={(v) => setForm({ ...form, technologies: v })} />
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Field label="Live URL" value={form.liveUrl} onChange={(v) => setForm({ ...form, liveUrl: v })} />
           <Field label="GitHub URL" value={form.githubUrl} onChange={(v) => setForm({ ...form, githubUrl: v })} />
         </div>
@@ -171,28 +171,30 @@ export default function ProjectsAdminPage() {
 
       {/* Existing Projects */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold text-white">Existing Projects</h2>
-        {projects.map((project) => (
-          <div key={project.id} className="bg-slate-800 border border-white/10 rounded-xl p-6 flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              {project.image && <img src={project.image} alt={project.title} className="w-16 h-12 object-cover rounded-lg" />}
-              <div>
-                <p className="text-white font-medium">{project.title}</p>
-                <p className="text-gray-400 text-sm">{project.category}</p>
+        <h2 className="text-xl font-semibold text-white mb-4">Existing Projects</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project) => (
+            <div key={project.id} className="bg-slate-800 border border-white/10 rounded-xl p-6 flex flex-col gap-4">
+              <div className="flex items-center gap-4">
+                {project.image && <img src={project.image} alt={project.title} className="w-16 h-12 object-cover rounded-lg" />}
+                <div className="flex-1">
+                  <p className="text-white font-medium break-words line-clamp-1">{project.title}</p>
+                  <p className="text-gray-400 text-sm">{project.category}</p>
+                </div>
+              </div>
+              <div className="flex gap-2 mt-auto">
+                <button onClick={() => handleEdit(project)} className="flex-1 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors">Edit</button>
+                <button onClick={() => handleDelete(project.id)} className="flex-1 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors">Delete</button>
               </div>
             </div>
-            <div className="flex gap-3">
-              <button onClick={() => handleEdit(project)} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors">Edit</button>
-              <button onClick={() => handleDelete(project.id)} className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors">Delete</button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Edit Modal */}
       <Modal isOpen={editModal} onClose={() => setEditModal(false)} title="Edit Project">
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Title" value={editForm.title} onChange={(v) => setEditForm({ ...editForm, title: v })} />
             <Field label="Category" value={editForm.category} onChange={(v) => setEditForm({ ...editForm, category: v })} />
           </div>
@@ -206,7 +208,7 @@ export default function ProjectsAdminPage() {
             <ImageUploadBox value={editForm.image} onChange={handleEditImageUpload} uploading={editUploading} aspectRatio="wide" />
           </div>
           <Field label="Technologies (comma separated)" value={editForm.technologies} onChange={(v) => setEditForm({ ...editForm, technologies: v })} />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="Live URL" value={editForm.liveUrl} onChange={(v) => setEditForm({ ...editForm, liveUrl: v })} />
             <Field label="GitHub URL" value={editForm.githubUrl} onChange={(v) => setEditForm({ ...editForm, githubUrl: v })} />
           </div>

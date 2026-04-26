@@ -75,20 +75,20 @@ const ContactSection: React.FC = () => {
     <section
       id="contact"
       data-aos="fade-up"
-      className="py-20 px-6 bg-gradient-to-b from-slate-800 to-slate-900 relative"
+      className="py-10 sm:py-20 px-6 bg-gradient-to-b from-slate-800 to-slate-900 relative"
     >
       <div className="max-w-4xl mx-auto">
-        <div data-aos="fade-up" className="text-center mb-16">
+        <div data-aos="fade-up" className="text-center mb-8 sm:mb-16">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Mail className="w-6 h-6 text-purple-400" />
             <span className="text-purple-400 text-sm font-medium tracking-wider uppercase">
               Get In Touch
             </span>
           </div>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-5xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Let&apos;s Build Something Amazing
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-xl text-gray-400 max-w-2xl mx-auto">
             Ready to bring your ideas to life? I&apos;m always excited to work
             on new projects and collaborate with fellow innovators.
           </p>
@@ -128,38 +128,38 @@ const ContactSection: React.FC = () => {
               data-aos="fade-down"
               className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/10 w-full max-w-full overflow-hidden"
             >
-              <h3 className="text-2xl font-bold text-white mb-6">
+              <h3 className="text-lg sm:text-2xl font-bold text-white mb-6">
                 Contact Information
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
                     <Mail className="w-6 h-6 text-white" />
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <div className="text-gray-400 text-sm">Email</div>
-                    <div className="text-white">{contactData?.email}</div>
+                    <div className="text-white break-all sm:break-normal text-sm sm:text-base">{contactData?.email}</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
                     <Phone className="w-6 h-6 text-white" />
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <div className="text-gray-400 text-sm">Phone</div>
-                    <div className="text-white">
+                    <div className="text-white break-words text-sm sm:text-base">
                       {contactData?.primaryPhone}
                       {contactData?.secondaryPhone && `, ${contactData.secondaryPhone}`}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
                     <MapPin className="w-6 h-6 text-white" />
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <div className="text-gray-400 text-sm">Location</div>
-                    <div className="text-white">{contactData?.location}</div>
+                    <div className="text-white break-words text-sm sm:text-base">{contactData?.location}</div>
                   </div>
                 </div>
               </div>
@@ -193,8 +193,8 @@ const ContactSection: React.FC = () => {
               data-aos="fade-up"
               className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/10 w-full max-w-full overflow-hidden"
             >
-              <h3 className="text-2xl font-bold text-white mb-4">Resume</h3>
-              <p className="text-gray-400 mb-6">
+              <h3 className="text-lg sm:text-2xl font-bold text-white mb-2 sm:mb-4">Resume</h3>
+              <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">
                 Download my complete resume to learn more about my experience,
                 education, and technical skills.
               </p>
@@ -204,7 +204,7 @@ const ContactSection: React.FC = () => {
                 className="group bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl flex items-center space-x-2 w-full justify-center"
               >
                 <Download className="w-5 h-5 animate-bounce" />
-                <span>Download Resume (PDF)</span>
+                <span className="text-xs sm:text-base" >Download Resume (PDF)</span>
               </Link>
             </div>
           </div>

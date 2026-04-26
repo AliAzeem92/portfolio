@@ -121,7 +121,7 @@ export default function CertificatesAdminPage() {
       {/* Add New */}
       <div className="bg-slate-800 border border-white/10 rounded-xl p-8 space-y-6 mb-8">
         <h2 className="text-xl font-semibold text-purple-400">Add New Certificate</h2>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Certificate Name</label>
             <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputCls} />
@@ -131,7 +131,7 @@ export default function CertificatesAdminPage() {
             <input type="text" value={form.provider} onChange={(e) => setForm({ ...form, provider: e.target.value })} className={inputCls} />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Certificate Image</label>
             <ImageUploadBox value={form.iconUrl} onChange={handleAddUpload} uploading={uploading} aspectRatio="square" />
@@ -148,7 +148,7 @@ export default function CertificatesAdminPage() {
 
       {/* Existing Certificates — 3-column card grid */}
       <h2 className="text-xl font-semibold text-white mb-4">Existing Certificates</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {certificates.map((cert) => (
           <div key={cert.id} className="bg-slate-800 border border-white/10 rounded-xl overflow-hidden flex flex-col">
             {/* Image */}

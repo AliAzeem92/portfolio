@@ -77,7 +77,7 @@ export default function AboutAdminPage() {
           <textarea rows={4} value={bio2} onChange={(e) => setBio2(e.target.value)}
             className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500 resize-none" />
         </div>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Projects Count</label>
             <input type="text" value={projectsCount} onChange={(e) => setProjectsCount(e.target.value)}
@@ -89,7 +89,7 @@ export default function AboutAdminPage() {
               className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Location</label>
             <input type="text" value={location} onChange={(e) => setLocation(e.target.value)}
@@ -101,7 +101,7 @@ export default function AboutAdminPage() {
               className="w-full px-4 py-3 bg-slate-700 text-white rounded-lg border border-white/10 outline-none focus:border-purple-500" />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Training</label>
             <input type="text" value={training} onChange={(e) => setTraining(e.target.value)}

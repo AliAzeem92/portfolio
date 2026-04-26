@@ -15,19 +15,19 @@ interface SkillsSectionProps {
 
 const SkillsSection: React.FC<SkillsSectionProps> = ({ skills }) => {
   return (
-    <section id="skills" data-aos="fade-up" className="py-20 px-6 bg-slate-900 relative">
+    <section id="skills" data-aos="fade-up" className="py-10 sm:py-20 px-6 bg-slate-900 relative">
       <div className="max-w-6xl mx-auto">
-        <div data-aos="fade-up" className="text-center mb-16">
+        <div data-aos="fade-up" className="text-center mb-8 sm:mb-16">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Zap className="w-6 h-6 text-purple-400" />
             <span className="text-purple-400 text-sm font-medium tracking-wider uppercase">
               Expertise
             </span>
           </div>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-2xl sm:text-5xl font-bold mb-3 sm:mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Skills & Technologies
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-xl text-gray-400 max-w-2xl mx-auto">
             A toolkit I use to design, build, and deploy modern web applications.
           </p>
         </div>

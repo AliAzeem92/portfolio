@@ -34,8 +34,9 @@ const Footer: React.FC<FooterProps> = ({ scrollToSection, name }) => {
             {name === null || name === undefined ? nameSkeleton : name}. All rights reserved.
           </div>
 
-          <div className="flex space-x-6 text-gray-400 text-sm">
+          <div className="flex space-x-6 text-gray-400 text-xs sm:text-sm">
             <button onClick={() => scrollToSection("about")} className="hover:text-white transition-colors">About</button>
+            <button onClick={() => scrollToSection("education")} className="hover:text-white transition-colors">Education</button>
             <button onClick={() => scrollToSection("projects")} className="hover:text-white transition-colors">Projects</button>
             <button onClick={() => scrollToSection("skills")} className="hover:text-white transition-colors">Skills</button>
             <button onClick={() => scrollToSection("contact")} className="hover:text-white transition-colors">Contact</button>

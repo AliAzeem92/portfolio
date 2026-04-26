@@ -40,10 +40,10 @@ const EducationSection: React.FC<EducationSectionProps> = ({ educationData, cert
               Academic Journey
             </span>
           </div>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <h2 className="text-xl sm:text-5xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Education & Certifications
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-sm md:text-lg text-gray-400 max-w-2xl mx-auto">
             My academic background and professional certifications that laid the
             foundation for my career in technology.
           </p>
@@ -84,10 +84,10 @@ const EducationSection: React.FC<EducationSectionProps> = ({ educationData, cert
                                 {edu.status}
                               </span>
                             </div>
-                            <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
+                            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
                               {edu.degree}
                             </h3>
-                            <p className="text-xl text-purple-400 font-semibold mb-1">
+                            <p className="text-md sm:text-xl text-purple-400 font-semibold mb-1">
                               {edu.institution}
                             </p>
                           </div>
@@ -112,7 +112,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({ educationData, cert
                           </div>
                         </div>
 
-                        <p className="text-gray-300 leading-relaxed">
+                        <p className="text-gray-300 leading-relaxed text-sm md:text-lg">
                           {edu.description}
                         </p>
 
@@ -126,7 +126,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({ educationData, cert
                             {edu.coursework.map((course) => (
                               <span
                                 key={course}
-                                className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm text-gray-300 border border-white/20 hover:border-purple-400/50 transition-colors"
+                                className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs sm:text-sm text-gray-300 border border-white/20 hover:border-purple-400/50 transition-colors"
                               >
                                 {course}
                               </span>
@@ -143,8 +143,8 @@ const EducationSection: React.FC<EducationSectionProps> = ({ educationData, cert
         </div>
 
         {/* Additional Certifications */}
-        <div className="mt-20">
-          <h3 className="text-2xl font-bold text-white mb-8 text-center">
+        <div className="mt-10 sm:mt-20">
+          <h3 className="text-xl sm:text-5xl font-bold text-white mb-8 text-center">
             Additional Certifications & Learning
           </h3>
           <div className="flex flex-wrap justify-center gap-6">
@@ -161,7 +161,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({ educationData, cert
                       alt={cert.name}
                       width={40}
                       height={40}
-                      className="w-10 h-10 object-contain"
+                      className="w-24 h-24 object-contain"
                     />
                   ) : (
                     <span className="text-3xl">{cert.icon}</span>

@@ -27,7 +27,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-purple-500/50 transition-all duration-300 group"
     >
       {/* Project Image */}
-      <div className="relative h-80 group/image mb-6">
+      <div className="relative h-32 sm:h-80 group/image mb-6">
         <Image
           src={project.image}
           alt={project.title}
@@ -59,17 +59,17 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       {/* Project Info */}
       <div className="space-y-4">
         {/* Category */}
-        <span className="text-purple-400 text-sm font-medium tracking-wider uppercase">
+        <span className="text-purple-400 text-xs sm:text-sm font-medium tracking-wider uppercase">
           {project.category}
         </span>
 
         {/* Title */}
-        <h3 className="text-2xl font-bold text-white group-hover:text-purple-300 transition-colors">
+        <h3 className="text-lg sm:text-2xl font-bold text-white group-hover:text-purple-300 transition-colors">
           {project.title}
         </h3>
 
         {/* Description */}
-        <p className="text-gray-300 leading-relaxed line-clamp-3">
+        <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
           {project.description}
         </p>
 
@@ -82,7 +82,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             {project.technologies.map((tech) => (
               <span
                 key={tech}
-                className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-sm text-gray-300 border border-white/20 hover:border-purple-400/50 transition-colors"
+                className="px-3 py-1 bg-white/10 backdrop-blur-sm rounded-full text-xs sm:text-sm text-gray-300 border border-white/20 hover:border-purple-400/50 transition-colors"
               >
                 {tech}
               </span>

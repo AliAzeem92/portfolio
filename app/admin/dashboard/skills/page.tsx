@@ -119,7 +119,7 @@ export default function SkillsAdminPage() {
       {/* Add New */}
       <div className="bg-slate-800 border border-white/10 rounded-xl p-8 space-y-6 mb-8">
         <h2 className="text-xl font-semibold text-purple-400">Add New Skill</h2>
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-400 text-sm mb-2">Logo Image</label>
             <ImageUploadBox value={form.iconUrl} onChange={handleAddUpload} uploading={uploading} aspectRatio="square" />
