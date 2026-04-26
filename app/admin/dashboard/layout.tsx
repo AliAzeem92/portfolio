@@ -25,10 +25,14 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogout = async () => {
+    setLoading(true);
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/admin/login");
+    // We don't necessarily need to set it to false because the page will transition away, 
+    // but just in case it takes a moment to redirect.
   };
 
   return (
@@ -92,9 +96,12 @@ export default function DashboardLayout({
         </nav>
         <button
           onClick={handleLogout}
-          className="mt-4 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white transition-colors"
+          disabled={loading}
+          className={`mt-4 px-4 py-2 rounded-lg text-white transition-colors ${
+            loading ? "bg-red-800 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+          }`}
         >
-          Logout
+          {loading ? "Logging out..." : "Logout"}
         </button>
       </aside>
 

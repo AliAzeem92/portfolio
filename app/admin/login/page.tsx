@@ -50,9 +50,9 @@ const LoginPage = () => {
   };
 
   return (
-    <main className="min-h-screen bg-slate-900 flex items-center justify-center">
-      <div className="bg-slate-800 p-8 rounded-xl border border-white/10 w-full max-w-md">
-        <h1 className="text-2xl font-bold text-white mb-6">Admin Login</h1>
+    <main className="min-h-screen bg-slate-900 flex items-center justify-center px-4 ">
+      <div className="bg-slate-800 p-4 sm:p-8 rounded-xl border border-white/10 w-full max-w-md">
+        <h1 className="text-2xl font-bold text-white mb-3 sm:mb-6">Admin Login</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="email"
